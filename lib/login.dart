@@ -1,7 +1,20 @@
+import 'package:englishquiz/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:englishquiz/home.dart';
 import 'package:englishquiz/register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _rememberMe = false; // Default value for the remember me checkbox
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +37,7 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 20.0),
               // Email Field
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
@@ -32,6 +46,7 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 20.0),
               // Password Field
               TextField(
+                controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: 'Mật khẩu',
                   border: OutlineInputBorder(),
@@ -39,100 +54,60 @@ class LoginPage extends StatelessWidget {
                 obscureText: true,
               ),
               SizedBox(height: 20.0),
-              // Forgot Password
-              GestureDetector(
-                onTap: () {
-                  // Chuyển hướng đến trang quên mật khẩu
-                },
-                child: Text(
-                  'Quên mật khẩu?',
-                  style: TextStyle(
-                    color: Colors.blue,
+              // Remember Me and Forgot Password
+              Row(
+                children: [
+                  // Remember Me Checkbox
+                  Checkbox(
+                    value: _rememberMe,
+                    onChanged: (value) {
+                      setState(() {
+                        // Update the value of _rememberMe when the checkbox state changes
+                        _rememberMe = value!;
+                      });
+                    },
                   ),
-                ),
+                  Text(
+                    'Remember Me',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Spacer(), // Add space between the checkbox and "Quên mật khẩu" text
+                  // Forgot Password
+                  GestureDetector(
+                    onTap: () {
+                      // Handle forgot password
+                    },
+                    child: Text(
+                      'Quên mật khẩu?',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 20.0),
               // Social Logins
               ElevatedButton(
                 onPressed: () {
-                  // Xử lý đăng nhập mới
+                  _signIn(context);
                 },
-                child: Text('Đăng nhập',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    )),
+                child: Text(
+                  'Đăng nhập',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
               ),
               SizedBox(height: 20.0),
-
-              Row(
-                children: [
-                  Expanded(
-                    child: Divider(
-                      color: Colors.black,
-                      height: 36,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text('HOẶC',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        )),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: Colors.black,
-                      height: 36,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Xử lý đăng nhập bằng Facebook
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Image.asset(
-                        'assets/facebook.jpg',
-                        width: 40.0,
-                        height: 40.0,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Xử lý đăng nhập bằng Gmail
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Image.asset(
-                        'assets/google.jpg',
-                        width: 40.0,
-                        height: 40.0,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Divider and Social Logins buttons...
               SizedBox(height: 20.0),
               // Don't have account? Sign up
               GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacement (
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => RegistrationPage()),
                   );
@@ -156,11 +131,29 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _signIn(BuildContext context) async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+    if (user != null) {
+      // Đăng ký thành công
+      // Chuyển hướng đến trang chính
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(user: user)),
+      );
+      print("User is successfully Signed In!");
+    } else {
+      // Đăng ký thất bại
+      print("Fail to Sign In!");
+    }
   }
 }

@@ -1,4 +1,7 @@
+import 'package:englishquiz/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:englishquiz/home.dart';
 import 'package:englishquiz/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -7,6 +10,9 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -71,9 +77,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             SizedBox(height: 20.0),
             // Nút Đăng ký
             ElevatedButton(
-              onPressed: () {
-                // Xử lý đăng ký
-              },
+              onPressed: _signUp,
               child: Text('Đăng ký'),
             ),
             SizedBox(height: 20.0),
@@ -120,5 +124,63 @@ class _RegistrationPageState extends State<RegistrationPage> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _signUp() async {
+    String name = _nameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String confirmPassword = _confirmPasswordController.text;
+
+    // User? user = await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
+    // if (user != null) {
+    //   // Đăng ký thành công
+    //   // Chuyển hướng đến trang chính
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => HomePage(user: user)),
+    //   );
+    //   print("User is successfully created!");
+    //
+    // } else {
+    //   // Đăng ký thất bại
+    //   print("Fail to create user! Please try again!");
+    // }
+
+    if (password == confirmPassword) {
+      User? user = await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
+      if (user != null) {
+        // Đăng ký thành công
+        // Chuyển hướng đến trang chính
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(user: user)),
+        );
+        print("User is successfully created!");
+      } else {
+        // Đăng ký thất bại
+        print("Fail to create user! Please try again!");
+      }
+    } else {
+      // Hiển thị thông báo rằng mật khẩu và xác nhận mật khẩu không khớp nhau
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Mật khẩu không khớp"),
+            content: Text("Mật khẩu và xác nhận mật khẩu không giống nhau. Vui lòng thử lại."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Đóng hộp thoại
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
   }
 }
