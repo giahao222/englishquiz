@@ -1,3 +1,4 @@
+import 'package:englishquiz/register.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -131,15 +132,31 @@ class LoginPage extends StatelessWidget {
               // Don't have account? Sign up
               GestureDetector(
                 onTap: () {
-                  // Chuyển hướng đến trang đăng ký
+                  Navigator.pushReplacement (
+                    context,
+                    MaterialPageRoute(builder: (context) => RegistrationPage()),
+                  );
                 },
-                child: Text(
-                  'Bạn chưa có tài khoản? Đăng ký ngay',
-                  style: TextStyle(
-                    color: Colors.blue,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Chưa có tài khoản? ',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      'Đăng ký',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
             ],
           ),
         ),
