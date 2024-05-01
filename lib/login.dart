@@ -52,6 +52,41 @@ class LoginPage extends StatelessWidget {
               ),
               SizedBox(height: 20.0),
               // Social Logins
+              ElevatedButton(
+                onPressed: () {
+                  // Xử lý đăng nhập mới
+                },
+                child: Text('Đăng nhập',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    )),
+              ),
+              SizedBox(height: 20.0),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      color: Colors.black,
+                      height: 36,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text('HOẶC',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        )),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      color: Colors.black,
+                      height: 36,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -68,6 +103,7 @@ class LoginPage extends StatelessWidget {
                         'assets/facebook.jpg',
                         width: 40.0,
                         height: 40.0,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -85,6 +121,7 @@ class LoginPage extends StatelessWidget {
                         'assets/google.jpg',
                         width: 40.0,
                         height: 40.0,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
