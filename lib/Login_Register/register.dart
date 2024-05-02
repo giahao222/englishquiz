@@ -1,6 +1,6 @@
 import 'package:englishquiz/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:englishquiz/home.dart';
-import 'package:englishquiz/login.dart';
+import 'package:englishquiz/Login_Register/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -148,7 +148,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     // }
 
     if (password == confirmPassword) {
-      User? user = await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
+      User? user = await _firebaseAuthService.signUpWithEmailAndPassword(email, password, context);
       if (user != null) {
         // Đăng ký thành công
         // Chuyển hướng đến trang chính

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:englishquiz/login.dart';
+import 'package:englishquiz/Login_Register/login.dart';
 
 class HomePage extends StatelessWidget {
   final User user;

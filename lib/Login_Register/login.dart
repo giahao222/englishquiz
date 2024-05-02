@@ -1,8 +1,10 @@
+import 'package:englishquiz/Login_Register/register.dart';
 import 'package:englishquiz/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:englishquiz/Login_Register/forgot_password.dart';
 import 'package:englishquiz/home.dart';
-import 'package:englishquiz/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -57,27 +59,12 @@ class _LoginPageState extends State<LoginPage> {
               // Remember Me and Forgot Password
               Row(
                 children: [
-                  // Remember Me Checkbox
-                  Checkbox(
-                    value: _rememberMe,
-                    onChanged: (value) {
-                      setState(() {
-                        // Update the value of _rememberMe when the checkbox state changes
-                        _rememberMe = value!;
-                      });
-                    },
-                  ),
-                  Text(
-                    'Remember Me',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
                   Spacer(), // Add space between the checkbox and "Quên mật khẩu" text
                   // Forgot Password
                   GestureDetector(
                     onTap: () {
                       // Handle forgot password
+                      _sendPasswordResetEmail(_emailController.text);
                     },
                     child: Text(
                       'Quên mật khẩu?',
@@ -156,4 +143,15 @@ class _LoginPageState extends State<LoginPage> {
       print("Fail to Sign In!");
     }
   }
+  void _sendPasswordResetEmail(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      // Email xác minh đã được gửi thành công
+      // Thông báo cho người dùng biết rằng họ cần kiểm tra email để đặt lại mật khẩu
+    } catch (e) {
+      print("Error sending password reset email: $e");
+      // Xử lý lỗi khi gửi email xác minh
+    }
+  }
+
 }
