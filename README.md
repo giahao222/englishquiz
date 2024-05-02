@@ -1,16 +1,9 @@
 # englishquiz
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Project tree 
+lib/: Thư mục chứa mã nguồn chính của ứng dụng.
+    assets/: Thư mục chứa tài nguyên như hình ảnh, font chữ, tệp âm thanh, vv. Các tài nguyê này được sử dụng trong ứng dụng.
+    screens/: Thư mục chứa các màn hình của ứng dụng.
+    services/: Thư mục chứa các dịch vụ, như giao tiếp với API hoặc cơ sở dữ liệu.
+    utils/: Thư mục chứa các tiện ích và hằng số.
+main.dart: Tệp chính, nơi ứng dụng được khởi động.
