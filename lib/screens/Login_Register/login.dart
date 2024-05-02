@@ -1,7 +1,7 @@
-import 'package:englishquiz/Login_Register/register.dart';
-import 'package:englishquiz/firebase_auth_implementation/firebase_auth_services.dart';
-import 'package:englishquiz/Login_Register/forgot_password.dart';
-import 'package:englishquiz/home.dart';
+import 'package:englishquiz/screens/Login_Register/register.dart';
+import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:englishquiz/screens/Login_Register/forgot_password.dart';
+import 'package:englishquiz/screens/home/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

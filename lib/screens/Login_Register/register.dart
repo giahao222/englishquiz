@@ -1,6 +1,6 @@
-import 'package:englishquiz/firebase_auth_implementation/firebase_auth_services.dart';
-import 'package:englishquiz/home.dart';
-import 'package:englishquiz/Login_Register/login.dart';
+import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_services.dart';
+import 'package:englishquiz/screens/home/home.dart';
+import 'package:englishquiz/screens/Login_Register/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
