@@ -1,7 +1,7 @@
-import 'package:englishquiz/screens/Login_Register/register.dart';
+import 'package:englishquiz/screens/auth/register.dart';
 import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_services.dart';
-import 'package:englishquiz/screens/Login_Register/forgot_password.dart';
-import 'package:englishquiz/screens/home/home.dart';
+import 'package:englishquiz/screens/auth/forgot_password.dart';
+import 'package:englishquiz/screens/home/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
       // Chuyển hướng đến trang chính
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage(user: user)),
+        MaterialPageRoute(builder: (context) => MainScreen(user: user)),
       );
       print("User is successfully Signed In!");
     } else {

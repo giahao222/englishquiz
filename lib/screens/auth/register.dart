@@ -1,6 +1,6 @@
 import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_services.dart';
-import 'package:englishquiz/screens/home/home.dart';
-import 'package:englishquiz/screens/Login_Register/login.dart';
+import 'package:englishquiz/screens/home/main_screen.dart';
+import 'package:englishquiz/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -154,7 +154,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         // Chuyển hướng đến trang chính
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(user: user)),
+          MaterialPageRoute(builder: (context) => MainScreen(user: user)),
         );
         print("User is successfully created!");
       } else {
