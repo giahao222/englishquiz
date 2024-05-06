@@ -139,8 +139,7 @@ class _LoginPageState extends State<LoginPage> {
       // Chuyển hướng đến trang chính
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => ConnectWord(topic: "Job", mode: "hard")),
+        MaterialPageRoute(builder: (context) => ModeLearn(name: "", mode: "")),
       );
       print("User is successfully Signed In!");
     } else {

@@ -14,6 +14,13 @@ class ConnectWord extends StatefulWidget {
   _ConnectWordState createState() => _ConnectWordState();
 }
 
+String shuffleStringWithSlash(String input) {
+  List<String> characters =
+      input.split(''); // Chuyển chuỗi thành danh sách các ký tự
+  characters.shuffle(); // Xáo trộn các ký tự
+  return characters.join('/'); // Kết hợp lại thành một chuỗi mới với dấu /
+}
+
 class _ConnectWordState extends State<ConnectWord> {
   final TextEditingController _textEditingController = TextEditingController();
   late List<String> ques;
@@ -52,7 +59,7 @@ class _ConnectWordState extends State<ConnectWord> {
         for (var item in dataList) {
           if (item is Map<String, dynamic>) {
             String word = item['word'] ?? '';
-            String meaning = item['meaning_vi'] ?? '';
+            String meaning = shuffleStringWithSlash(word);
             String desc = item['meaning_en'] ?? '';
             setState(() {
               ques.add(meaning);
