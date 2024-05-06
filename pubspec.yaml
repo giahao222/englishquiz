@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.6
+  web: ^0.4.0
   get:
 
 
@@ -39,6 +40,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.27.0
   firebase_auth: 4.17.8
+  firebase_database: ^10.4.9
+  firebase_storage: ^11.6.9
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +69,10 @@ flutter:
   assets:
     - assets/facebook.jpg
     - assets/google.jpg
+    - assets/quizz.png
+    - assets/write.png
+    - assets/connect.png
+    - assets/flipcard.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

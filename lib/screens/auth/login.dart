@@ -1,4 +1,7 @@
+import 'package:englishquiz/screens/activity/ConnectWord.dart';
 import 'package:englishquiz/screens/auth/register.dart';
+import 'package:englishquiz/screens/home/ModeLearn.dart';
+import 'package:englishquiz/screens/home/home.dart';
 import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:englishquiz/screens/auth/forgot_password.dart';
 import 'package:englishquiz/screens/home/main_screen.dart';
@@ -129,13 +132,15 @@ class _LoginPageState extends State<LoginPage> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    User? user = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+    User? user =
+        await _firebaseAuthService.signInWithEmailAndPassword(email, password);
     if (user != null) {
       // Đăng ký thành công
       // Chuyển hướng đến trang chính
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MainScreen(user: user)),
+        MaterialPageRoute(
+            builder: (context) => ConnectWord(topic: "Job", mode: "hard")),
       );
       print("User is successfully Signed In!");
     } else {
@@ -143,6 +148,7 @@ class _LoginPageState extends State<LoginPage> {
       print("Fail to Sign In!");
     }
   }
+
   void _sendPasswordResetEmail(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
@@ -153,5 +159,4 @@ class _LoginPageState extends State<LoginPage> {
       // Xử lý lỗi khi gửi email xác minh
     }
   }
-
 }
