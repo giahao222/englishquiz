@@ -1,124 +1,200 @@
-// import 'package:englishquiz/screens/home/FolderAdapter.dart';
-// import 'package:flutter/material.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_database/firebase_database.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
-// import 'Folder.dart';
-// import 'Topic.dart';
-// import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'Folder.dart';
+import 'Topic.dart';
 
-// class HomeFragment extends StatefulWidget {
-//   @override
-//   _HomeFragmentState createState() => _HomeFragmentState();
-// }
+class HomeFragment extends StatefulWidget {
+  @override
+  _HomeFragmentState createState() => _HomeFragmentState();
+}
 
-// class _HomeFragmentState extends State<HomeFragment> {
-//   List<Topic> _arrayList = [];
-//   List<Folder> _arrayFolder = [];
-//   late FolderAdapter _folderAdapter;
-//   late FirebaseAuth _mAuth;
-//   late User _user;
-//   late FirebaseStorage _storage;
-//   late Reference _storageReference;
-//   int _z = 0;
-//   List<String> _imageArray = [
-//     "personality",
-//     "marketing",
-//     "art",
-//     "emotion",
-//     "time",
-//     "tool",
-//     "color",
-//     "animal",
-//     "play",
-//     "tool",
-//     "weather1",
-//     "play",
-//     "study",
-//     "play"
-//   ];
-//   DatabaseReference _databaseReference = FirebaseDatabase.instance.reference();
+class _HomeFragmentState extends State<HomeFragment> {
+  List<Folder> _arrayFolder = [];
+  late FirebaseAuth _mAuth;
+  late User _user;
+  late FirebaseStorage _storage;
+  late Reference _storageReference;
+  int _z = 0;
+  List<String> _imageArray = [
+    "personality",
+    "marketing",
+    "art",
+    "emotion",
+    "time",
+    "tool",
+    "color",
+    "animal",
+    "play",
+    "tool",
+    "weather1",
+    "play",
+    "study",
+    "play"
+  ];
+  DatabaseReference _databaseReference = FirebaseDatabase.instance.reference();
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _folderAdapter = FolderAdapter(context, _arrayFolder, 0);
-//     _getData();
-//   }
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//         child: ListView.builder(
-//           itemCount: _arrayList.length,
-//           itemBuilder: (context, index) {
-//             return ListTile(
-//               title: Text(_arrayList[index].name),
-//               subtitle: Text(_arrayList[index].des),
-//               leading: Image.asset('assets/${_arrayList[index].id}.png'),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        child: _buildListView(),
+      ),
+    );
+  }
 
-//   void _getData() {
-//     List<String> imageList = List.from(_imageArray);
-//     List<Folder> mFolder = [];
-//     List<Topic> mTopic = [];
+  Widget _buildListView() {
+    if (_arrayFolder.isEmpty) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return ListView.builder(
+        itemCount: _arrayFolder.length,
+        itemBuilder: (context, index) {
+          return _buildFolderItem(_arrayFolder[index]);
+        },
+      );
+    }
+  }
 
-//     DatabaseReference folder = _databaseReference
-//         .child('home')
-//         .child('mode')
-//         .child('easy')
-//         .child('folder');
-//     folder.once().then((snapshot) {
-//       final dataSnapshot = snapshot.snapshot;
-//       if (dataSnapshot.value != null) {
-//         mFolder.clear();
-//         (dataSnapshot.value as Map).forEach((key, value) {
-//           DatabaseReference s = folder.child(key).child('topics');
-//           s.once().then((snapshot2) {
-//             final dataSnapshot2 = snapshot2.snapshot;
-//             if (dataSnapshot2.value != null) {
-//               (dataSnapshot2.value as Map).forEach((key2, value2) {
-//                 DatabaseReference des = _databaseReference
-//                     .child('home')
-//                     .child('mode')
-//                     .child('description')
-//                     .child(value2);
-//                 des.once().then((snapshot3) {
-//                   final dataSnapshot3 = snapshot3.snapshot;
-//                   ImageProvider imageProvider =
-//                       AssetImage("assets/${imageList[_z]}.png");
-//                   imageProvider
-//                       .resolve(createLocalImageConfiguration(context))
-//                       .addListener(
-//                     ImageStreamListener((info, _) {
-//                       String resourceId = info.image.hashCode.toString();
-//                       // Sử dụng resourceId ở đây
-//                       mTopic.add(Topic(
-//                           value2, dataSnapshot3.value.toString(), resourceId));
-//                       _z++;
-//                       if (mTopic.length ==
-//                           (dataSnapshot2.value as Map).length) {
-//                         mFolder.add(Folder(key, List.from(mTopic)));
-//                         mTopic.clear();
-//                         setState(() {
-//                           _arrayList = List.from(mFolder);
-//                         });
-//                       }
-//                     }),
-//                   );
-//                 });
-//               });
-//             }
-//           });
-//         });
-//       }
-//     });
-//     _z = 0;
-//   }
-// }
+  Widget _buildFolderItem(Folder folder) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              folder.getNameFolder(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          Container(
+            height: 200.0,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: AlwaysScrollableScrollPhysics(),
+              itemCount: folder.mTopic.length,
+              itemBuilder: (context, index) {
+                return _buildTopicCard(folder.mTopic[index]);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTopicCard(Topic topic) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Container(
+          width: 300,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'assets/connect.png',
+                height: 100.0,
+                width: 100.0,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: 8.0),
+              Text(
+                topic.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                topic.des,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _getData() async {
+    List<String> imageList = List.from(_imageArray);
+
+    try {
+      DatabaseReference folder = _databaseReference
+          .child('home')
+          .child('mode')
+          .child('easy')
+          .child('folder');
+      DatabaseEvent snapshot = await folder.once();
+
+      Map<dynamic, dynamic> dataSnapshot =
+          snapshot.snapshot.value as Map<dynamic, dynamic>;
+      if (dataSnapshot != null) {
+        for (var entry in dataSnapshot.entries) {
+          List<Topic> mTopic = await _getTopics(
+              entry.key.toString(), entry.value.toString(), imageList);
+          _arrayFolder.add(Folder(entry.key, List.from(mTopic)));
+        }
+        setState(() {});
+      }
+    } catch (e) {
+      print('Error getting data: $e');
+    }
+  }
+
+  Future<List<Topic>> _getTopics(
+      String key, String value, List<String> imageList) async {
+    List<Topic> mTopic = [];
+
+    try {
+      DatabaseReference s = _databaseReference
+          .child('home')
+          .child('mode')
+          .child('easy')
+          .child('folder')
+          .child(key)
+          .child('topics');
+      DatabaseEvent snapshot2 = await s.once();
+
+      List<dynamic> dataSnapshot2 = snapshot2.snapshot.value as List<dynamic>;
+      if (dataSnapshot2 != null) {
+        for (var entry in dataSnapshot2) {
+          DatabaseReference des = _databaseReference
+              .child('home')
+              .child('mode')
+              .child('description')
+              .child(entry.toString());
+          DatabaseEvent snapshot3 = await des.once();
+          String dataSnapshot3 = snapshot3.snapshot.value as String;
+          String imageId = _getImage(imageList);
+
+          mTopic.add(Topic(entry.toString(), dataSnapshot3, imageId));
+          print('data: ' + dataSnapshot3);
+        }
+      }
+    } catch (e) {
+      print('Error getting topics: $e');
+    }
+
+    return mTopic;
+  }
+
+  String _getImage(List<String> imageList) {
+    String imageId = imageList[_z % imageList.length];
+    _z++;
+    return imageId;
+  }
+}

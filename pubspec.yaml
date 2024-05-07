@@ -73,6 +73,19 @@ flutter:
     - assets/write.png
     - assets/connect.png
     - assets/flipcard.png
+    - assets/animal.jpg
+    - assets/art.jpg
+    - assets/color.jpg
+    - assets/emotion.jpg
+    - assets/marketing.jpg
+    - assets/personality.jpg
+    - assets/play.jpg
+    - assets/sport.png
+    - assets/study.jpg
+    - assets/time.jpg
+    - assets/tool.jpg
+    - assets/weather.png
+    - assets/weather1.jpg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

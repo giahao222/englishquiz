@@ -60,6 +60,7 @@ class DefaultFirebaseOptions {
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyC7-IxHssYuKBJI8Duo4j4kWaxMtlhW1DU',
     appId: '1:620007171981:android:9005c3a027e9b216e7ffc4',
+    authDomain: 'appenglishquiz.firebaseapp.com',
     messagingSenderId: '620007171981',
     projectId: 'appenglishquiz',
     storageBucket: 'appenglishquiz.appspot.com',
