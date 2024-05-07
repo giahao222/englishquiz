@@ -1,36 +1,37 @@
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonSerializable()
 class Topic {
-  String name;
-  String des;
   String id;
+  String name;
+  String creator;
+  String image;
+  bool isPublic;
+  bool isEngType;
+  Map<String,dynamic> listVocab;
 
-  Topic(this.name, this.des, this.id);
+  Topic(this.id, this.name, this.creator, this.image, this.isPublic,
+      this.isEngType, this.listVocab);
 
-  String getName() {
-    return name;
+  factory Topic.fromJson(String id, Map<dynamic, dynamic> json) {
+    return Topic(
+      id,
+      json['name'],
+      json['creator'],
+      json['image'],
+      json['isPublic'],
+      json['isEngType'],
+      json['list_vocab'],
+    );
   }
 
-  void setName(String name) {
-    this.name = name;
-  }
-
-  String getId() {
-    return id;
-  }
-
-  void setId(String id) {
-    this.id = id;
-  }
-
-  String getDes() {
-    return des;
-  }
-
-  void setDes(String des) {
-    this.des = des;
-  }
-
-  @override
-  String toString() {
-    return "Topic{name: $name, des: $des, id: $id}";
-  }
+  Map<dynamic, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'creator': creator,
+        'image': image,
+        'isPublic': isPublic,
+        'isEngType': isEngType,
+        'list_vocab': listVocab,
+      };
 }

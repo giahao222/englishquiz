@@ -24,7 +24,7 @@ class _QuizzleState extends State<Quizzle> {
   @override
   void initState() {
     super.initState();
-    databaseReference = FirebaseDatabase.instance.reference();
+    databaseReference = FirebaseDatabase.instance.ref();
     ques = [];
     ans = [];
     rand = [];
