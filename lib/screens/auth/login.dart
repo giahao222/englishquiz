@@ -1,6 +1,7 @@
 import 'package:englishquiz/screens/activity/ConnectWord.dart';
 import 'package:englishquiz/screens/auth/register.dart';
 import 'package:englishquiz/screens/home/HomeFragment.dart';
+import 'package:englishquiz/screens/home/MainScreen.dart';
 import 'package:englishquiz/screens/home/ModeLearn.dart';
 import 'package:englishquiz/screens/home/home.dart';
 import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_services.dart';
@@ -139,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
       // Chuyển hướng đến trang chính
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeFragment()),
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
       print("User is successfully Signed In!");
     } else {

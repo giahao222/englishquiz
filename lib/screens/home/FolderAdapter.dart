@@ -45,7 +45,7 @@ class FolderAdapter extends StatelessWidget {
       child: Column(
         children: [
           Text(topic.name),
-          Text(topic.des),
+          Text(topic.creator),
         ],
       ),
     );

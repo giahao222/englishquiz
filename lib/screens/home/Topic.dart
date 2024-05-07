@@ -8,7 +8,7 @@ class Topic {
   String image;
   bool isPublic;
   bool isEngType;
-  Map<String,dynamic> listVocab;
+  Map<String, dynamic> listVocab;
 
   Topic(this.id, this.name, this.creator, this.image, this.isPublic,
       this.isEngType, this.listVocab);
