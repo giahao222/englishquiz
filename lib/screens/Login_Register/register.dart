@@ -3,6 +3,8 @@ import 'package:englishquiz/screens/home/home.dart';
 import 'package:englishquiz/screens/Login_Register/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -11,6 +13,7 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
 
+  final _form = GlobalKey<FormState>();
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
   final TextEditingController _nameController = TextEditingController();
@@ -132,34 +135,27 @@ class _RegistrationPageState extends State<RegistrationPage> {
     String password = _passwordController.text;
     String confirmPassword = _confirmPasswordController.text;
 
-    // User? user = await _firebaseAuthService.signUpWithEmailAndPassword(email, password);
-    // if (user != null) {
-    //   // Đăng ký thành công
-    //   // Chuyển hướng đến trang chính
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => HomePage(user: user)),
-    //   );
-    //   print("User is successfully created!");
-    //
-    // } else {
-    //   // Đăng ký thất bại
-    //   print("Fail to create user! Please try again!");
-    // }
-
     if (password == confirmPassword) {
-      User? user = await _firebaseAuthService.signUpWithEmailAndPassword(email, password, context);
-      if (user != null) {
-        // Đăng ký thành công
-        // Chuyển hướng đến trang chính
+      try {
+        // Tạo tài khoản người dùng trong Authentication của Firebase
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        // Cập nhật displayName của người dùng
+        await userCredential.user!.updateDisplayName(name);
+        await userCredential.user!.reload();
+
+        // Chuyển hướng đến trang chính sau khi tạo tài khoản thành công
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(user: user)),
+          MaterialPageRoute(builder: (context) => HomePage(user: userCredential.user!)),
         );
+
         print("User is successfully created!");
-      } else {
-        // Đăng ký thất bại
-        print("Fail to create user! Please try again!");
+      } catch (error) {
+        print("Failed to create user: $error");
       }
     } else {
       // Hiển thị thông báo rằng mật khẩu và xác nhận mật khẩu không khớp nhau
@@ -181,6 +177,34 @@ class _RegistrationPageState extends State<RegistrationPage> {
         },
       );
     }
-
   }
+
+
+
+  void writeData(String uid, String name, String email) async {
+    Map<String, dynamic> userData = {
+      'name': name,
+      'email': email,
+      'password': _passwordController.text,
+      // Bạn có thể thêm các trường dữ liệu khác tại đây nếu cần
+    };
+
+    try {
+      var url = "https://appenglishquiz-default-rtdb.firebaseio.com/Accounts/$uid.json";
+      final response = await http.put( // Sử dụng PUT thay vì POST để cập nhật dữ liệu
+        Uri.parse(url),
+        body: json.encode(userData),
+      );
+      if (response.statusCode == 200) {
+        print("Data saved successfully!");
+      } else {
+        print("Failed to save data: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Error saving data: $error");
+    }
+  }
+
+
 }
+

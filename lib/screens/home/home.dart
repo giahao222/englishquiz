@@ -4,8 +4,9 @@ import 'package:englishquiz/screens/Login_Register/login.dart';
 
 class HomePage extends StatelessWidget {
   final User user;
+  final _creator = FirebaseAuth.instance.currentUser!.displayName;
 
-  const HomePage({Key? key, required this.user}) : super(key: key);
+  HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class HomePage extends StatelessWidget {
           children: [
             if (user.email != null)  // Kiểm tra user không null và email không null
               Text(
-                'Xin chào, ${user.email}!',
+                'Xin chào, ${_creator}!',
                 style: TextStyle(fontSize: 20.0),
               ),
             SizedBox(height: 20.0),
@@ -47,4 +48,5 @@ class HomePage extends StatelessWidget {
       print(e.toString());
     }
   }
+
 }
