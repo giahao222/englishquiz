@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     authDomain: 'appenglishquiz.firebaseapp.com',
     storageBucket: 'appenglishquiz.appspot.com',
     measurementId: 'G-Y28ZK45RLL',
+    databaseURL: 'https://appenglishquiz-default-rtdb.firebaseio.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -62,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '620007171981',
     projectId: 'appenglishquiz',
     storageBucket: 'appenglishquiz.appspot.com',
+    databaseURL: 'https://appenglishquiz-default-rtdb.firebaseio.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -70,9 +72,11 @@ class DefaultFirebaseOptions {
     messagingSenderId: '620007171981',
     projectId: 'appenglishquiz',
     storageBucket: 'appenglishquiz.appspot.com',
-    androidClientId: '620007171981-e0fj748014obktt89rl6te7i355nch23.apps.googleusercontent.com',
-    iosClientId: '620007171981-oft6i2krurq1onjmr0ofumg1if7vmfri.apps.googleusercontent.com',
+    androidClientId:
+        '620007171981-e0fj748014obktt89rl6te7i355nch23.apps.googleusercontent.com',
+    iosClientId:
+        '620007171981-oft6i2krurq1onjmr0ofumg1if7vmfri.apps.googleusercontent.com',
     iosBundleId: 'com.example.englishquiz',
+    databaseURL: 'https://appenglishquiz-default-rtdb.firebaseio.com',
   );
-
 }
