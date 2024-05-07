@@ -4,7 +4,7 @@ import 'package:englishquiz/screens/activity/Quizzle.dart';
 import 'package:englishquiz/screens/activity/WriteAnswer.dart';
 import 'package:englishquiz/screens/auth/login.dart';
 import 'package:englishquiz/screens/home/ModeLearning.dart';
-import 'package:englishquiz/screens/home/home.dart';
+import 'package:englishquiz/screens/home/Home.dart';
 import 'package:flutter/material.dart';
 
 class ModeLearn extends StatelessWidget {
