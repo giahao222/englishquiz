@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:englishquiz/screens/auth/login.dart';
-import 'package:englishquiz/screens/home/Topic.dart';
+import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/screens/library/AddTopic.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -68,46 +68,59 @@ class MyTopics extends StatelessWidget {
             itemCount: topicController.topics.length,
             itemBuilder: (context, index) {
               Topic topic = topicController.topics[index];
-              print(topic.toString());
-              return Card(
-                elevation: 5,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: Column(
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        AspectRatio(
-                          aspectRatio: 1 / 1,
-                          child: Image.network(
-                            topic.image,
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.2,
-                            errorBuilder: (context, error, stackTrace) => Center(
-                              child: Text('Image not found'),
+              return InkWell(
+                onTap: () {
+                  Get.toNamed('/topic', arguments: topic);
+                },
+                child: Card(
+                  elevation: 5,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Column(
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: Image.network(
+                              topic.image,
+                              fit: BoxFit.cover,
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.2,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                color: Colors.orange[700],
+                              ),
                             ),
                           ),
-                        ),
-                        BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-                          child: Container(
-                            color: Colors.black.withOpacity(0.3),
+                          BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                            child: Container(
+                              color: Colors.black.withOpacity(0.3),
+                            ),
                           ),
-                        ),
-                        Text(
-                          topic.name,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )
-                  ],
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              topic.name,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )
+                          
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               );
             },
+            
           );
         }
       }),

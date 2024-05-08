@@ -1,16 +1,12 @@
-import 'package:englishquiz/screens/home/Topic.dart';
+import 'package:englishquiz/models/WordPair.dart';
+import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CardData {
-  var vietnamese = ''.obs;
-  var english = ''.obs;
 
-  CardData({required this.vietnamese, required this.english});
-}
 
 class AddTopicController extends GetxController {
   var name = ''.obs;
@@ -20,7 +16,7 @@ class AddTopicController extends GetxController {
   var listVocab = <String, dynamic>{}.obs;
   var engWord = '';
   var vieWord = '';
-  var listCard = <CardData>[].obs;
+  var listCard = <WordPair>[].obs;
   // final _creator = FirebaseAuth.instance.currentUser!.displayName??'Unknown';
 
   void uploadTopic() async {
@@ -44,7 +40,7 @@ class AddTopicController extends GetxController {
     Get.back();
   }
 
-  Map<String, dynamic> _convertToListVocab(RxList<CardData> listCard) {
+  Map<String, dynamic> _convertToListVocab(RxList<WordPair> listCard) {
     Map<String, dynamic> listVocab = {};
     listCard.forEach((card) {
       listVocab[card.english.value] = card.vietnamese.value;
@@ -53,7 +49,7 @@ class AddTopicController extends GetxController {
   }
 
   // Function to add card
-  void addCard(CardData card) {
+  void addCard(WordPair card) {
     listCard.add(card);
   }
 
@@ -88,7 +84,7 @@ class AddTopic extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(right: 20),
             child: IconButton(
-              onPressed: () {},
+              onPressed: controller.uploadTopic,
               icon: Icon(
                 Icons.save,
                 color: Colors.deepPurple,
@@ -119,7 +115,7 @@ class AddTopic extends StatelessWidget {
                     onChanged: (value) => controller.isPublic.value = value,
                   )),
               Obx(() => SwitchListTile(
-                    title: Text("Is English Type?"),
+                    title: Text("English to Vietnamese?"),
                     value: controller.isEngType.value,
                     onChanged: (value) => controller.isEngType.value = value,
                   )),
@@ -171,7 +167,7 @@ class AddTopic extends StatelessWidget {
                                   actions: [
                                     TextButton(
                                       onPressed: () {
-                                        controller.addCard(CardData(
+                                        controller.addCard(WordPair(
                                             english: controller.engWord.obs,
                                             vietnamese:
                                                 controller.vieWord.obs));

@@ -1,4 +1,4 @@
-import 'Topic.dart';
+import '../../models/Topic.dart';
 
 class Folder {
   String nameFolder;
