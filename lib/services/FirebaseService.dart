@@ -19,7 +19,17 @@ class FirebaseService extends GetxService {
   Future<void> addData(String node, Map<String, dynamic> data) async {
     try {
       DatabaseReference voc = _database.child(node);
-      await voc.push().set(data);
+      await voc.set(data);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  //update data
+  Future<void> updateData(String node, Map<String, dynamic> data) async {
+    try {
+      DatabaseReference voc = _database.child(node);
+      await voc.update(data);
     } catch (e) {
       print(e);
     }

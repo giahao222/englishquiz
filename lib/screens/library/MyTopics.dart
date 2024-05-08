@@ -19,10 +19,10 @@ class TopicController extends GetxController {
     super.onInit();
   }
 
-  void fetchTopics() async {
+  void fetchTopics() {
     try {
       isLoading(true);
-      var topicRef = await FirebaseDatabase.instance.ref().child('Topics');
+      var topicRef = FirebaseDatabase.instance.ref().child('Topics');
       topicRef.onValue.listen((event) {
         if(event.snapshot.value == null) {
           return;
@@ -70,7 +70,7 @@ class MyTopics extends StatelessWidget {
               Topic topic = topicController.topics[index];
               return InkWell(
                 onTap: () {
-                  Get.toNamed('/topic', arguments: topic);
+                  Get.toNamed('/topic', arguments: topic.id);
                 },
                 child: Card(
                   elevation: 5,

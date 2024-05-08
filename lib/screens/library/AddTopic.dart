@@ -1,6 +1,7 @@
 import 'package:englishquiz/models/WordPair.dart';
 import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
+import 'package:englishquiz/utils/UniqueIdGenerator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -30,21 +31,22 @@ class AddTopicController extends GetxController {
     }
 
     Topic topic = Topic(
+        UniqueIdGenerator().generateUniqueId(),
         name.value,
         'Unknown',
         image.value,
         isPublic.value,
         isEngType.value,
         _convertToListVocab(listCard));
-    await FirebaseService().addData('Topics', topic.toJson());
+    await FirebaseService().addData('Topics/${topic.id}', topic.toJson());
     Get.back();
   }
 
   Map<String, dynamic> _convertToListVocab(RxList<WordPair> listCard) {
     Map<String, dynamic> listVocab = {};
-    listCard.forEach((card) {
+    for (var card in listCard) {
       listVocab[card.english.value] = card.vietnamese.value;
-    });
+    }
     return listVocab;
   }
 
@@ -56,10 +58,6 @@ class AddTopicController extends GetxController {
   // Function to remove card
   void removeCard(int index) {
     listCard.removeAt(index);
-    for (int i = 0; i < listCard.length; i++) {
-      print(
-          'Card $i: ${listCard[i].english.value} - ${listCard[i].vietnamese.value}');
-    }
   }
 
   String? textValidator(String value) {
