@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class Topic {
-  String id;
   String name;
   String creator;
   String image;
@@ -10,12 +9,11 @@ class Topic {
   bool isEngType;
   Map<String, dynamic> listVocab;
 
-  Topic(this.id, this.name, this.creator, this.image, this.isPublic,
-      this.isEngType, this.listVocab);
+  Topic(this.name, this.creator, this.image, this.isPublic, this.isEngType,
+      this.listVocab);
 
-  factory Topic.fromJson(String id, Map<dynamic, dynamic> json) {
+  factory Topic.fromJson(Map<dynamic, dynamic> json) {
     return Topic(
-      id,
       json['name'],
       json['creator'],
       json['image'],
@@ -25,8 +23,7 @@ class Topic {
     );
   }
 
-  Map<dynamic, dynamic> toJson() => {
-        'id': id,
+  Map<String, dynamic> toJson() => {
         'name': name,
         'creator': creator,
         'image': image,
@@ -34,4 +31,9 @@ class Topic {
         'isEngType': isEngType,
         'list_vocab': listVocab,
       };
+
+  @override
+  String toString() {
+    return 'Topic{name: $name, creator: $creator, image: $image, isPublic: $isPublic, isEngType: $isEngType, listVocab: $listVocab}';
+  }
 }

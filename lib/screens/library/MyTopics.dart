@@ -1,14 +1,48 @@
 import 'dart:ui';
 
+import 'package:englishquiz/screens/auth/login.dart';
 import 'package:englishquiz/screens/home/Topic.dart';
 import 'package:englishquiz/screens/library/AddTopic.dart';
-import 'package:englishquiz/screens/library/TopicController.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+
+class TopicController extends GetxController {
+  var topics = [].obs;
+  var isLoading = true.obs;
+
+  @override
+  void onInit() {
+    fetchTopics();
+    super.onInit();
+  }
+
+  void fetchTopics() async {
+    try {
+      isLoading(true);
+      var topicRef = await FirebaseDatabase.instance.ref().child('Topics');
+      topicRef.onValue.listen((event) {
+        if(event.snapshot.value == null) {
+          return;
+        }
+        Map<dynamic, dynamic> data = event.snapshot.value as Map<dynamic, dynamic>;
+        topics.value = _convertToListTopic(data);
+      });
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  List<Topic> _convertToListTopic(Map<dynamic, dynamic> data) {
+    List<Topic> topics = [];
+    data.forEach((key, value) {
+      topics.add(Topic.fromJson(value));
+    });
+    return topics;
+  }
+}
 
 class MyTopics extends StatelessWidget {
   MyTopics({super.key});
@@ -50,6 +84,9 @@ class MyTopics extends StatelessWidget {
                             fit: BoxFit.cover,
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.height * 0.2,
+                            errorBuilder: (context, error, stackTrace) => Center(
+                              child: Text('Image not found'),
+                            ),
                           ),
                         ),
                         BackdropFilter(
@@ -76,7 +113,7 @@ class MyTopics extends StatelessWidget {
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Get.toNamed('/add_topic');
+          Get.toNamed('/add-topic');
         },
         child: Icon(Icons.add),
       ),

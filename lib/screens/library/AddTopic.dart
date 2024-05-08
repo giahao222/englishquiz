@@ -1,14 +1,15 @@
-import 'package:englishquiz/utils/UniqueKeyGenerator.dart';
+import 'package:englishquiz/screens/home/Topic.dart';
+import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class WordPair {
-  String eng;
-  String vie;
+class CardData {
+  var vietnamese = ''.obs;
+  var english = ''.obs;
 
-  WordPair({required this.eng, required this.vie});
+  CardData({required this.vietnamese, required this.english});
 }
 
 class AddTopicController extends GetxController {
@@ -17,24 +18,52 @@ class AddTopicController extends GetxController {
   var isPublic = false.obs;
   var isEngType = false.obs;
   var listVocab = <String, dynamic>{}.obs;
-  var topics = <WordPair>[].obs;
-  final _creator = FirebaseAuth.instance.currentUser!.displayName;
+  var engWord = '';
+  var vieWord = '';
+  var listCard = <CardData>[].obs;
+  // final _creator = FirebaseAuth.instance.currentUser!.displayName??'Unknown';
 
+  void uploadTopic() async {
+    if (name.value.isEmpty || image.value.isEmpty || listCard.isEmpty) {
+      Get.snackbar('Error', 'Please fill all fields',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          duration: Duration(seconds: 2));
+      return;
+    }
 
-  @override
-  void onInit() {
-    super.onInit();
+    Topic topic = Topic(
+        name.value,
+        'Unknown',
+        image.value,
+        isPublic.value,
+        isEngType.value,
+        _convertToListVocab(listCard));
+    await FirebaseService().addData('Topics', topic.toJson());
+    Get.back();
   }
 
-  void uploadTopic() {
+  Map<String, dynamic> _convertToListVocab(RxList<CardData> listCard) {
+    Map<String, dynamic> listVocab = {};
+    listCard.forEach((card) {
+      listVocab[card.english.value] = card.vietnamese.value;
+    });
+    return listVocab;
   }
 
-  void addCard() {
-    topics.add(WordPair(eng: '', vie: ''));
+  // Function to add card
+  void addCard(CardData card) {
+    listCard.add(card);
   }
 
+  // Function to remove card
   void removeCard(int index) {
-    topics.removeAt(index);
+    listCard.removeAt(index);
+    for (int i = 0; i < listCard.length; i++) {
+      print(
+          'Card $i: ${listCard[i].english.value} - ${listCard[i].vietnamese.value}');
+    }
   }
 
   String? textValidator(String value) {
@@ -48,15 +77,28 @@ class AddTopicController extends GetxController {
 class AddTopic extends StatelessWidget {
   final AddTopicController controller = Get.put(AddTopicController());
 
+  AddTopic({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Upload Topic"),
+        actions: [
+          Container(
+            margin: EdgeInsets.only(right: 20),
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.save,
+                color: Colors.deepPurple,
+              ),
+            ),
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Form(
+      body: ListView(padding: EdgeInsets.all(16), children: [
+        Form(
           child: Column(
             children: [
               TextFormField(
@@ -65,9 +107,11 @@ class AddTopic extends StatelessWidget {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => controller.textValidator(value!),
               ),
-              TextField(
+              TextFormField(
                 onChanged: (value) => controller.image.value = value,
                 decoration: InputDecoration(labelText: 'Image URL'),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) => controller.textValidator(value!),
               ),
               Obx(() => SwitchListTile(
                     title: Text("Is Public?"),
@@ -87,60 +131,95 @@ class AddTopic extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('List Vocabulary'),
-                  IconButton(
-                    tooltip: 'Import from csv file',
-                    onPressed: () {
-                    },
-                    icon: Icon(Icons.import_contacts_rounded),
+                  Expanded(
+                    child: Text('List Vocabulary'),
+                    flex: 6,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      tooltip: 'Add Vocabulary',
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                                  title: Text('Add Vocabulary'),
+                                  content: Column(
+                                    children: [
+                                      TextFormField(
+                                        onChanged: (value) =>
+                                            controller.engWord = value,
+                                        decoration: InputDecoration(
+                                            labelText: 'English'),
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        validator: (value) =>
+                                            controller.textValidator(value!),
+                                      ),
+                                      TextFormField(
+                                        onChanged: (value) =>
+                                            controller.vieWord = value,
+                                        decoration: InputDecoration(
+                                            labelText: 'Vietnamese'),
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        validator: (value) =>
+                                            controller.textValidator(value!),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        controller.addCard(CardData(
+                                            english: controller.engWord.obs,
+                                            vietnamese:
+                                                controller.vieWord.obs));
+                                        Get.back();
+                                      },
+                                      child: Text('Add'),
+                                    ),
+                                  ],
+                                ));
+                      },
+                      icon: Icon(Icons.add),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      tooltip: 'Import from csv file',
+                      onPressed: () {},
+                      icon: Icon(Icons.import_contacts_rounded),
+                    ),
                   ),
                 ],
               ),
-              Obx(
-                () => Column(
-                  children: List.generate(
-                      controller.topics.length,
-                      (index) => Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
+              Obx(() => Column(
+                    children: controller.listCard
+                        .map((card) => Card(
+                              child: Row(
                                 children: [
-                                  TextField(
-                                    onChanged: (value) =>
-                                        controller.topics[index].eng = value,
-                                    decoration:
-                                        InputDecoration(labelText: 'English'),
-                                  ),
-                                  TextField(
-                                    onChanged: (value) =>
-                                        controller.topics[index].vie = value,
-                                    decoration:
-                                        InputDecoration(labelText: 'Vietnamese'),
-                                  ),
-                                  if (controller.topics.length > 1)
-                                    IconButton(
-                                      onPressed: () =>
-                                          controller.removeCard(index),
-                                      icon: Icon(Icons.delete),
-                                      color: Colors.red,
+                                  Expanded(
+                                      child: Container(
+                                    padding: EdgeInsets.all(15),
+                                    child: Text(
+                                      '${card.english.value} : ${card.vietnamese.value}',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
                                     ),
+                                  )),
+                                  IconButton(
+                                    onPressed: () => controller.removeCard(
+                                        controller.listCard.indexOf(card)),
+                                    icon: Icon(Icons.remove),
+                                  ),
                                 ],
                               ),
-                            ),
-                          )),
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  controller.addCard();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.green),
-                  fixedSize: MaterialStateProperty.all(Size.fromWidth(100)),
-                ),
-                child: Icon(Icons.add, color: Colors.white),
-              ),
+                            ))
+                        .toList(),
+                  )),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: controller.uploadTopic,
@@ -154,7 +233,7 @@ class AddTopic extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      ]),
     );
   }
 }

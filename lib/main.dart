@@ -2,7 +2,7 @@ import 'package:englishquiz/screens/auth/login.dart';
 import 'package:englishquiz/screens/home/Home.dart';
 import 'package:englishquiz/screens/home/MainScreen.dart';
 import 'package:englishquiz/screens/library/AddTopic.dart';
-import 'package:englishquiz/screens/library/TopicController.dart';
+import 'package:englishquiz/screens/library/MyTopics.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       home: MainScreen(),
       debugShowCheckedModeBanner: false,
       getPages: [
-        GetPage(name: '/add_topic', page: () => AddTopic()),
+        GetPage(name: '/add-topic', page: () => AddTopic()),
       ],
     );
   }

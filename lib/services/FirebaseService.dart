@@ -15,4 +15,13 @@ class FirebaseService extends GetxService {
       return {'error': e};
     }
   }
+
+  Future<void> addData(String node, Map<String, dynamic> data) async {
+    try {
+      DatabaseReference voc = _database.child(node);
+      await voc.push().set(data);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
