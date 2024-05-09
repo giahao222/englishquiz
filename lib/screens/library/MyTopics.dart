@@ -27,7 +27,7 @@ class TopicController extends GetxController {
         if(event.snapshot.value == null) {
           return;
         }
-        Map<dynamic, dynamic> data = event.snapshot.value as Map<dynamic, dynamic>;
+        Map<String, dynamic> data = event.snapshot.value as Map<String, dynamic>;
         topics.value = _convertToListTopic(data);
       });
     } finally {

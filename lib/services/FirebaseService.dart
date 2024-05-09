@@ -16,6 +16,15 @@ class FirebaseService extends GetxService {
     }
   }
 
+  Future<void> removeData(String node) async {
+    try {
+      DatabaseReference voc = _database.child(node);
+      await voc.remove();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> addData(String node, Map<String, dynamic> data) async {
     try {
       DatabaseReference voc = _database.child(node);

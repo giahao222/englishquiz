@@ -2,12 +2,8 @@ import 'package:englishquiz/models/WordPair.dart';
 import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:englishquiz/utils/UniqueIdGenerator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-
 
 class AddTopicController extends GetxController {
   var name = ''.obs;
@@ -18,6 +14,7 @@ class AddTopicController extends GetxController {
   var engWord = '';
   var vieWord = '';
   var listCard = <WordPair>[].obs;
+  final FirebaseService _firebaseService = Get.find();
   // final _creator = FirebaseAuth.instance.currentUser!.displayName??'Unknown';
 
   void uploadTopic() async {
@@ -38,7 +35,7 @@ class AddTopicController extends GetxController {
         isPublic.value,
         isEngType.value,
         _convertToListVocab(listCard));
-    await FirebaseService().addData('Topics/${topic.id}', topic.toJson());
+    await _firebaseService.addData('Topics/${topic.id}', topic.toJson());
     Get.back();
   }
 

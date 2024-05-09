@@ -17,6 +17,7 @@ class InTopicController extends GetxController {
   var listCard = <WordPair>[].obs;
   Topic topic = Topic('', '', '', '', false, false, {});
   final id = Get.arguments;
+  final FirebaseService _firebaseService = Get.find();
   // final _creator = FirebaseAuth.instance.currentUser!.displayName??'Unknown';
 
   final nameController = TextEditingController();
@@ -37,10 +38,10 @@ class InTopicController extends GetxController {
       isEngType.value = topic.isEngType;
       listCard.clear();
       topic.listVocab.forEach((key, value) {
-        listCard.add(WordPair(english: key.obs, vietnamese: value.toString().obs));
+        listCard
+            .add(WordPair(english: key.obs, vietnamese: value.toString().obs));
       });
     });
-
   }
 
   void updateTopic() {
@@ -54,7 +55,7 @@ class InTopicController extends GetxController {
     }
     Topic topic = Topic(id, name.value, 'Unknown', image.value, isPublic.value,
         isEngType.value, _convertToListVocab(listCard));
-    FirebaseService().updateData('Topics/$id', topic.toJson());
+    _firebaseService.updateData('Topics/$id', topic.toJson());
     Get.back();
   }
 
@@ -64,6 +65,12 @@ class InTopicController extends GetxController {
       listVocab[card.english.value] = card.vietnamese.value;
     }
     return listVocab;
+  }
+
+  void deleteTopic() async {
+    await _firebaseService.removeData('Topics/$id');
+    Get.back();
+    Get.back();
   }
 
   // Function to add card
@@ -113,6 +120,33 @@ class InTopic extends StatelessWidget {
               icon: Icon(
                 Icons.replay_outlined,
                 color: Colors.deepPurple,
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(right: 20),
+            child: IconButton(
+              onPressed: () {
+                Get.defaultDialog(
+                  title: 'Delete Topic',
+                  content: Text('Are you sure to delete this topic?'),
+                  actions: [
+                    TextButton(
+                      onPressed: controller.deleteTopic,
+                      child: Text('Yes'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text('No'),
+                    ),
+                  ],
+                );
+              },
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red,
               ),
             ),
           ),
