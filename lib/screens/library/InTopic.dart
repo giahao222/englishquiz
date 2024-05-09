@@ -1,7 +1,9 @@
+import 'package:csv/csv.dart';
 import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/models/WordPair.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:englishquiz/utils/UniqueIdGenerator.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,7 +46,29 @@ class InTopicController extends GetxController {
     });
   }
 
-  void updateTopic() {
+  void importFromCSV() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+    );
+    if (result == null || result.files.single.bytes == null) return;
+    final input = String.fromCharCodes(result.files.first.bytes!);
+    List<List<dynamic>> csvList = const CsvToListConverter().convert(input);
+    for (var row in csvList) {
+      if (row.length != 2) {
+        Get.snackbar('Error', 'Invalid CSV file',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 2));
+        return;
+      }
+      addCard(WordPair(
+          english: row[0].toString().obs, vietnamese: row[1].toString().obs));
+    }
+  }
+
+  void updateTopic() async {
     if (name.value.isEmpty || image.value.isEmpty || listCard.isEmpty) {
       Get.snackbar('Error', 'Please fill all fields',
           snackPosition: SnackPosition.BOTTOM,
@@ -53,16 +77,17 @@ class InTopicController extends GetxController {
           duration: Duration(seconds: 2));
       return;
     }
-    Topic topic = Topic(id, name.value, 'Unknown', image.value, isPublic.value,
-        isEngType.value, _convertToListVocab(listCard));
-    _firebaseService.updateData('Topics/$id', topic.toJson());
-    Get.back();
+    Topic topic = Topic(id, name.value, 'Unknown', image.value,
+        isPublic.value, isEngType.value, _listCardToJson(listCard));
+    await _firebaseService.updateData('Topics/$id', topic.toJson());
+    print(topic);
+    // Get.back();
   }
 
-  Map<String, dynamic> _convertToListVocab(RxList<WordPair> listCard) {
+  Map<String, dynamic> _listCardToJson(RxList<WordPair> listCard) {
     Map<String, dynamic> listVocab = {};
     for (var card in listCard) {
-      listVocab[card.english.value] = card.vietnamese.value;
+      listVocab.addAll({card.english.value: card.vietnamese.value});
     }
     return listVocab;
   }
@@ -246,7 +271,7 @@ class InTopic extends StatelessWidget {
                     flex: 1,
                     child: IconButton(
                       tooltip: 'Import from csv file',
-                      onPressed: () {},
+                      onPressed: controller.importFromCSV,
                       icon: Icon(Icons.import_contacts_rounded),
                     ),
                   ),

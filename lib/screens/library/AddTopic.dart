@@ -1,7 +1,9 @@
+import 'package:csv/csv.dart';
 import 'package:englishquiz/models/WordPair.dart';
 import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:englishquiz/utils/UniqueIdGenerator.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,6 +18,28 @@ class AddTopicController extends GetxController {
   var listCard = <WordPair>[].obs;
   final FirebaseService _firebaseService = Get.find();
   // final _creator = FirebaseAuth.instance.currentUser!.displayName??'Unknown';
+
+  void importFromCSV() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+    );
+    if (result == null || result.files.single.bytes == null) return;
+    final input = String.fromCharCodes(result.files.first.bytes!);
+    List<List<dynamic>> csvList = const CsvToListConverter().convert(input);
+    for (var row in csvList) {
+      if (row.length != 2) {
+        Get.snackbar('Error', 'Invalid CSV file',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 2));
+        return;
+      }
+      addCard(WordPair(
+          english: row[0].toString().obs, vietnamese: row[1].toString().obs));
+    }
+  }
 
   void uploadTopic() async {
     if (name.value.isEmpty || image.value.isEmpty || listCard.isEmpty) {
@@ -180,7 +204,7 @@ class AddTopic extends StatelessWidget {
                     flex: 1,
                     child: IconButton(
                       tooltip: 'Import from csv file',
-                      onPressed: () {},
+                      onPressed: controller.importFromCSV,
                       icon: Icon(Icons.import_contacts_rounded),
                     ),
                   ),
