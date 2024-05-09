@@ -1,8 +1,6 @@
 import 'dart:ui';
 
-import 'package:englishquiz/screens/auth/login.dart';
 import 'package:englishquiz/models/Topic.dart';
-import 'package:englishquiz/screens/library/AddTopic.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +10,7 @@ import 'package:get/get.dart';
 class TopicController extends GetxController {
   var topics = [].obs;
   var isLoading = true.obs;
+  var folderId = Get.arguments;
 
   @override
   void onInit() {
@@ -20,6 +19,7 @@ class TopicController extends GetxController {
   }
 
   void fetchTopics() {
+    print(folderId);
     try {
       isLoading(true);
       var topicRef = FirebaseDatabase.instance.ref().child('Topics');
@@ -48,7 +48,7 @@ class MyTopics extends StatelessWidget {
   MyTopics({super.key});
 
   final FirebaseService firebaseService = Get.find();
-  final TopicController topicController = Get.find();
+  final TopicController topicController = Get.put(TopicController());
 
   @override
   Widget build(BuildContext context) {
@@ -59,68 +59,71 @@ class MyTopics extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else {
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemCount: topicController.topics.length,
-            itemBuilder: (context, index) {
-              Topic topic = topicController.topics[index];
-              return InkWell(
-                onTap: () {
-                  Get.toNamed('/topic', arguments: topic.id);
-                },
-                child: Card(
-                  elevation: 5,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  child: Column(
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 1 / 1,
-                            child: Image.network(
-                              topic.image,
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.2,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                color: Colors.orange[700],
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: topicController.topics.length,
+              itemBuilder: (context, index) {
+                Topic topic = topicController.topics[index];
+                return InkWell(
+                  onTap: () {
+                    Get.toNamed('/topic', arguments: topic.id);
+                  },
+                  child: Card(
+                    elevation: 5,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: Column(
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 1 / 1,
+                              child: Image.network(
+                                topic.image,
+                                fit: BoxFit.cover,
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height * 0.2,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  color: Colors.deepPurple,
+                                ),
                               ),
                             ),
-                          ),
-                          BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-                            child: Container(
-                              color: Colors.black.withOpacity(0.3),
+                            BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                              child: Container(
+                                color: Colors.black.withOpacity(0.3),
+                              ),
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              topic.name,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          )
-                          
-                        ],
-                      )
-                    ],
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                topic.name,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                            
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-            
+                );
+              },
+              
+            ),
           );
         }
       }),
