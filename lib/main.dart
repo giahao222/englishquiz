@@ -1,6 +1,8 @@
+import 'package:englishquiz/screens/home/Home.dart';
 import 'package:englishquiz/screens/home/MainScreen.dart';
 import 'package:englishquiz/screens/library/AddTopic.dart';
 import 'package:englishquiz/screens/library/InTopic.dart';
+import 'package:englishquiz/screens/library/MyTopics.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -23,6 +25,7 @@ Future<void> main() async {
   );
 
   Get.put(FirebaseService());
+  Get.put(TopicController());
   runApp(const MyApp());
 }
 

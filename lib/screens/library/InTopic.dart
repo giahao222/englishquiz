@@ -79,8 +79,7 @@ class InTopicController extends GetxController {
     Topic topic = Topic(id, name.value, 'Unknown', image.value,
         isPublic.value, isEngType.value, _listCardToJson(listCard));
     await _firebaseService.updateData('Topics/$id', topic.toJson());
-    print(topic);
-    // Get.back();
+    Get.back();
   }
 
   Map<String, dynamic> _listCardToJson(RxList<WordPair> listCard) {

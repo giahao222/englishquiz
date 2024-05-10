@@ -22,10 +22,11 @@ class TopicController extends GetxController {
       isLoading(true);
       var topicRef = FirebaseDatabase.instance.ref().child('Topics');
       topicRef.onValue.listen((event) {
-        if(event.snapshot.value == null) {
+        if (event.snapshot.value == null) {
           return;
         }
-        Map<String, dynamic> data = event.snapshot.value as Map<String, dynamic>;
+        Map<String, dynamic> data =
+            event.snapshot.value as Map<String, dynamic>;
         topics.value = _convertToListTopic(data);
       });
     } finally {
@@ -46,7 +47,7 @@ class MyTopics extends StatelessWidget {
   MyTopics({super.key});
 
   final FirebaseService firebaseService = Get.find();
-  final TopicController topicController = Get.put(TopicController());
+  final TopicController topicController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -68,59 +69,8 @@ class MyTopics extends StatelessWidget {
               itemCount: topicController.topics.length,
               itemBuilder: (context, index) {
                 Topic topic = topicController.topics[index];
-                return InkWell(
-                  onTap: () {
-                    Get.toNamed('/topic', arguments: topic.id);
-                  },
-                  child: Card(
-                    elevation: 5,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Column(
-                      children: [
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            AspectRatio(
-                              aspectRatio: 1 / 1,
-                              child: Image.network(
-                                topic.image,
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height * 0.2,
-                                errorBuilder: (context, error, stackTrace) => Container(
-                                  color: Colors.deepPurple,
-                                ),
-                              ),
-                            ),
-                            BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-                              child: Container(
-                                color: Colors.black.withOpacity(0.3),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                topic.name,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )
-                            
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                );
+                return TopicItemCard(topic: topic, fontSize: 24);
               },
-              
             ),
           );
         }
@@ -130,6 +80,72 @@ class MyTopics extends StatelessWidget {
           Get.toNamed('/add-topic');
         },
         child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class TopicItemCard extends StatelessWidget {
+  var fontSize;
+
+  TopicItemCard({
+    super.key,
+    required this.topic,
+    this.fontSize = 20,
+  });
+
+  final Topic topic;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Get.toNamed('/topic', arguments: topic.id);
+      },
+      child: Card(
+        elevation: 10,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                AspectRatio(
+                  aspectRatio: 1 / 1,
+                  child: Image.network(
+                    topic.image,
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: Colors.deepPurple,
+                    ),
+                  ),
+                ),
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    topic.name,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.bold),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
