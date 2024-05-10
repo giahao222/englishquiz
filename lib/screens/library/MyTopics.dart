@@ -10,7 +10,6 @@ import 'package:get/get.dart';
 class TopicController extends GetxController {
   var topics = [].obs;
   var isLoading = true.obs;
-  var folderId = Get.arguments;
 
   @override
   void onInit() {
@@ -19,7 +18,6 @@ class TopicController extends GetxController {
   }
 
   void fetchTopics() {
-    print(folderId);
     try {
       isLoading(true);
       var topicRef = FirebaseDatabase.instance.ref().child('Topics');

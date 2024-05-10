@@ -1,4 +1,5 @@
 import 'package:englishquiz/models/Folder.dart';
+import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:englishquiz/utils/UniqueIdGenerator.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -10,14 +11,17 @@ class FolderController extends GetxController {
   var folders = <Folder>[].obs;
   var isLoading = true.obs;
   var nameFolder = ''.obs;
+  var listTopic = <Topic>[].obs;
+  var enableAddTopic = false.obs;
   final FirebaseService _firebaseService = Get.find();
   @override
   void onInit() {
+    fetchFolders();
     fetchTopics();
     super.onInit();
   }
 
-  void fetchTopics() {
+  void fetchFolders() {
     try {
       isLoading(true);
       var topicRef = FirebaseDatabase.instance.ref().child('Folders');
@@ -34,9 +38,35 @@ class FolderController extends GetxController {
     }
   }
 
-  // data ={47947293728: {id: 47947293728, name: Folder1, topics: {6436011b-fa5e-4c52-9551-91833bf1134c: {creator: Unknown, id: 6436011b-fa5e-4c52-9551-91833bf1134c, image: 123, isEngType: true, isPublic: false, list_vocab: {ok: oke, sleep: ng }, name: 123}, 83942375947: {creator: Unknown, id: 83942375947, image: https://picsum.photos/200, isEngType: true, isPublic: true, list_vocab: {eat: ăn, relax: nghỉ, sleep: ngủ}, name: Topic 1}}}}
+  void fetchTopics() {
+    try {
+      isLoading(true);
+      var topicRef = FirebaseDatabase.instance.ref().child('Topics');
+      topicRef.onValue.listen((event) {
+        if (event.snapshot.value == null) {
+          return;
+        }
+        Map<String, dynamic> data =
+            event.snapshot.value as Map<String, dynamic>;
+        listTopic.value = _convertToListTopic(data);
+      });
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  List<Topic> _convertToListTopic(Map<dynamic, dynamic> data) {
+    List<Topic> topics = [];
+    if(data == null) return List<Topic>.empty(growable: true);
+    data.forEach((key, value) {
+      topics.add(Topic.fromJson(value));
+    });
+    return topics;
+  }
+
   List<Folder> _convertToListFolder(Map<dynamic, dynamic> data) {
     List<Folder> folders = [];
+    if(data == null) return List<Folder>.empty(growable: true);
     data.forEach((key, value) {
       folders.add(Folder.fromJson(key, value));
     });
@@ -99,8 +129,55 @@ class FolderController extends GetxController {
     );
   }
 
-  void showFolder() {
-    print(folders);
+  void addTopicToFolder(BuildContext context, Folder folder,
+      Function(List<Topic>) onTopicsSelected) {
+    RxList<Topic> topics = <Topic>[].obs;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add Topic to Folder'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: listTopic.map((topic) {
+                return Obx(() => CheckboxListTile(
+                      title: Text(topic.name),
+                      value: topics.contains(topic),
+                      onChanged: (bool? value) {
+                        if (value == true) {
+                          topics.add(topic);
+                        } else {
+                          topics.remove(topic);
+                        }
+                      },
+                    ));
+              }).toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: onTopicsSelected(topics),
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void addTopicToFolderDb(Folder folder, List<Topic> topics) {
+    for (var topic in topics) {
+      var data = {
+        'id': topic.id,
+        'name': topic.name,
+        'creator': topic.creator,
+        'image': topic.image,
+        'isEngType': topic.isEngType,
+        'isPublic': topic.isPublic,
+        'list_vocab': topic.listVocab
+      };
+      _firebaseService.addData('Folders/${folder.id}/topics/${topic.id}', data);
+    }
   }
 }
 
@@ -143,38 +220,60 @@ class MyFolder extends StatelessWidget {
                 return ExpansionTile(
                   title: Text(folderController.folders[index].nameFolder),
                   leading: Icon(Icons.folder),
-                  trailing: IconButton(
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Delete Folder'),
-                            content: const Text('Are you sure?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  folderController.deleteFolder(
-                                      folderController.folders[index].id);
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Yes'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('No'),
-                              ),
-                            ],
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.add_rounded,
+                          color: Colors.green,
+                        ),
+                        onPressed: () {
+                          folderController.addTopicToFolder(
+                              context, folderController.folders[index],
+                              (List<Topic> topics) {
+                            return () {
+                              folderController.addTopicToFolderDb(
+                                  folderController.folders[index], topics);
+                              Navigator.of(context).pop();
+                            };
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Delete Folder'),
+                                content: const Text('Are you sure?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      folderController.deleteFolder(
+                                          folderController.folders[index].id);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Yes'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('No'),
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         },
-                      );
-                    },
+                      ),
+                    ],
                   ),
                   children: [
                     ListView.separated(
