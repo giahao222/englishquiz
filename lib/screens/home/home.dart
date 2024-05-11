@@ -18,13 +18,16 @@ class HomeController extends GetxController {
       'listOfTopics': false,
       'publicTopics': false,
     };
+
+    ever(topicController.topics, (_) {
+      fetchPublicTopics();
+    });
   }
 
   void fetchPublicTopics() {
-    var newPublicTopic = topicController.topics
+    publicTopics.value = topicController.topics
         .where((element) => element.isPublic)
         .toList() as List<Topic>;
-    publicTopics.assignAll(newPublicTopic);
   }
 }
 
@@ -150,7 +153,6 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               )),
-              
         ),
       ),
       floatingActionButton: FloatingActionButton(
