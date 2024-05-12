@@ -31,8 +31,11 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.6
-  web: ^0.4.0
+  web:
   get:
+  image_picker: ^1.0.8
+  csv: ^6.0.0
+  file_picker: ^8.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -76,6 +79,18 @@ flutter:
     - assets/connect.png
     - assets/flipcard.png
     - assets/animal.jpg
+    - assets/art.jpg
+    - assets/color.jpg
+    - assets/emotion.jpg
+    - assets/marketing.jpg
+    - assets/personality.jpg
+    - assets/play.jpg
+    - assets/sport.png
+    - assets/study.jpg
+    - assets/time.jpg
+    - assets/tool.jpg
+    - assets/weather.png
+    - assets/weather1.jpg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
