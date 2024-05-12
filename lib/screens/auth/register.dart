@@ -150,7 +150,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         // Chuyển hướng đến trang chính sau khi tạo tài khoản thành công
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(user: userCredential.user!)),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
 
         print("User is successfully created!");
