@@ -1,11 +1,12 @@
-import 'package:englishquiz/screens/Login_Register/login.dart';
+import 'package:englishquiz/screens/auth/change_password.dart';
+import 'package:englishquiz/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
-  final String userName; // Tên người dùng
+  final String displayName; // Tên người dùng
 
-  const ProfilePage({Key? key, required this.userName}) : super(key: key);
+  const ProfilePage({Key? key, required this.displayName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class ProfilePage extends StatelessWidget {
             ),
             SizedBox(height: 20.0),
             Text(
-              userName,
+              displayName,
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -44,6 +45,7 @@ class ProfilePage extends StatelessWidget {
               title: Text('Change Password'),
               onTap: () {
                 // Xử lý khi nhấp vào "Change Password"
+                _navigateToChangePassword(context);
               },
             ),
             ListTile(
@@ -84,4 +86,11 @@ class ProfilePage extends StatelessWidget {
       print(e.toString());
     }
   }
+  void _navigateToChangePassword(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChangePasswordPage()),
+    );
+  }
+
 }

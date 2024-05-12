@@ -11,7 +11,7 @@ class MainScreen extends StatelessWidget {
   final BottomNavBarController bottomNavBarController =
       Get.put(BottomNavBarController());
   final List<Widget> _pages = [
-    const HomePage(),
+    // const HomePage(),
     const LibraryPage(),
     const SettingPage()
   ];

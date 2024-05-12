@@ -1,4 +1,5 @@
 import 'package:englishquiz/screens/activity/ConnectWord.dart';
+import 'package:englishquiz/screens/auth/profile.dart';
 import 'package:englishquiz/screens/auth/register.dart';
 import 'package:englishquiz/screens/home/ModeLearn.dart';
 import 'package:englishquiz/screens/home/home.dart';
@@ -139,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
       // Chuyển hướng đến trang chính
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ModeLearn(name: "", mode: "")),
+        MaterialPageRoute(builder: (context) => ProfilePage(displayName: user.displayName ?? email,)),
       );
       print("User is successfully Signed In!");
     } else {
