@@ -4,6 +4,7 @@ import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:englishquiz/utils/UniqueIdGenerator.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +18,7 @@ class AddTopicController extends GetxController {
   var vieWord = '';
   var listCard = <WordPair>[].obs;
   final FirebaseService _firebaseService = Get.find();
-  // final _creator = FirebaseAuth.instance.currentUser!.displayName??'Unknown';
+  final _creator = FirebaseAuth.instance.currentUser!.uid;
 
   void importFromCSV() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -54,7 +55,7 @@ class AddTopicController extends GetxController {
     Topic topic = Topic(
         UniqueIdGenerator().generateUniqueId(),
         name.value,
-        'Unknown',
+        _creator,
         image.value,
         isPublic.value,
         isEngType.value,
