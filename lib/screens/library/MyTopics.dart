@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +11,7 @@ import 'package:get/get.dart';
 class TopicController extends GetxController {
   var topics = [].obs;
   var isLoading = true.obs;
+  var userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void onInit() {
@@ -27,6 +29,12 @@ class TopicController extends GetxController {
         }
         Map<String, dynamic> data =
             event.snapshot.value as Map<String, dynamic>;
+        // Map<String, dynamic> myTopic = {};
+        // data.forEach((key, value) {
+        //   if (value['userId'] == userId) {
+        //     myTopic[key] = value;
+        //   }
+        // });
         topics.value = _convertToListTopic(data);
       });
     } finally {
@@ -34,7 +42,7 @@ class TopicController extends GetxController {
     }
   }
 
-  List<Topic> _convertToListTopic(Map<dynamic, dynamic> data) {
+  List<Topic> _convertToListTopic(Map<String, dynamic> data) {
     List<Topic> topics = [];
     data.forEach((key, value) {
       topics.add(Topic.fromJson(value));
@@ -100,7 +108,11 @@ class TopicItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.toNamed('/topic', arguments: topic.id);
+        Get.toNamed('mode-learn', arguments: {
+          'topicId': topic.id,
+          'name': topic.name,
+          'mode':'user'
+        });
       },
       child: Card(
         elevation: 10,

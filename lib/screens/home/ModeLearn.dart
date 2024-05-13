@@ -6,18 +6,34 @@ import 'package:englishquiz/screens/auth/login.dart';
 import 'package:englishquiz/screens/home/ModeLearning.dart';
 import 'package:englishquiz/screens/home/Home.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class ModeLearnController extends GetxController {
+  String topicId = Get.arguments['topicId'];
+}
 
 class ModeLearn extends StatelessWidget {
-  final String name;
-  final String mode;
+  final String? name = Get.arguments?['name'];
+  final String? mode = Get.arguments?['mode'];
+  final ModeLearnController controller = Get.put(ModeLearnController());
 
-  ModeLearn({required this.name, required this.mode});
+  ModeLearn({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mode Learn'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit_rounded),
+            onPressed: () {
+              Get.toNamed('/topic', arguments: {
+                'topicId': controller.topicId,
+              });
+            },
+          ),
+        ],
       ),
       body: _buildModeList(context),
     );
