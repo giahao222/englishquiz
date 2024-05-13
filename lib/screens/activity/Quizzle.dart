@@ -20,7 +20,7 @@ class _QuizzleState extends State<Quizzle> {
   late List<String> rand;
   late int i;
   late double score;
-  late String selectedAnswer;
+  late List<String> userAnswers; // Danh sách chứa câu trả lời của người dùng
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _QuizzleState extends State<Quizzle> {
     rand = [];
     i = 0;
     score = 0.0;
-    selectedAnswer = '';
+    userAnswers = []; // Khởi tạo danh sách câu trả lời của người dùng
     DatabaseReference voc = databaseReference
         .child("home")
         .child("mode")
@@ -131,8 +131,9 @@ class _QuizzleState extends State<Quizzle> {
     return ElevatedButton(
       onPressed: () {
         setState(() {
-          selectedAnswer = text;
-          _checkAnswer(selectedAnswer);
+          userAnswers
+              .add(text); // Thêm câu trả lời của người dùng vào danh sách
+          _checkAnswer(text);
         });
       },
       child: Text(text),
@@ -151,7 +152,6 @@ class _QuizzleState extends State<Quizzle> {
   void _nextQuestion() {
     setState(() {
       i++;
-      selectedAnswer = '';
     });
     if (i == ans.length) {
       _showResult();
@@ -164,8 +164,8 @@ class _QuizzleState extends State<Quizzle> {
       MaterialPageRoute(
         builder: (context) => Result(
           questions: ques,
-          userAnswers:
-              List.from(ans), // Chuyển userAnswers thành một bản sao của ans
+          userAnswers: List.from(
+              userAnswers), // Chuyển danh sách câu trả lời của người dùng vào Result
           correctAnswers: ans,
         ),
       ),
