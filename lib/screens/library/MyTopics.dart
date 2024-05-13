@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 class TopicController extends GetxController {
   var topics = [].obs;
   var isLoading = true.obs;
-  var userId = FirebaseAuth.instance.currentUser!.uid;
+  // var userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void onInit() {
