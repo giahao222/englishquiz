@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
-import 'package:englishquiz/screens/object/ResultItem.dart';
-import 'package:englishquiz/screens/activity/Result.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class FlashCardMode extends StatefulWidget {
   final String topic;
@@ -15,11 +13,15 @@ class FlashCardMode extends StatefulWidget {
   _FlashCardModeState createState() => _FlashCardModeState();
 }
 
-class _FlashCardModeState extends State<FlashCardMode> {
+class _FlashCardModeState extends State<FlashCardMode>
+    with SingleTickerProviderStateMixin {
   late List<String> eng;
   late List<String> viet;
   late int i;
-  late bool isFront;
+  late AnimationController _controller;
+  late Animation<double> _rotation;
+  bool isFront = true;
+  final FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
@@ -27,7 +29,11 @@ class _FlashCardModeState extends State<FlashCardMode> {
     eng = [];
     viet = [];
     i = 0;
-    isFront = true;
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    _rotation = Tween<double>(begin: 0, end: pi).animate(_controller);
     DatabaseReference voc = FirebaseDatabase.instance
         .reference()
         .child("home")
@@ -63,7 +69,7 @@ class _FlashCardModeState extends State<FlashCardMode> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flash Card Mode'),
+        title: Text('Flash Card'),
       ),
       body: _buildBody(),
     );
@@ -76,15 +82,34 @@ class _FlashCardModeState extends State<FlashCardMode> {
         SizedBox(height: 20),
         GestureDetector(
           onTap: () {
+            _controller.isCompleted
+                ? _controller.reverse()
+                : _controller.forward();
+
+            if (isFront) {
+              _speakEnglish();
+            } else {
+              _speakVietnamese();
+            }
             setState(() {
-              isFront = !isFront;
+              if (i < eng.length - 1) {
+                isFront = !isFront;
+              }
             });
           },
-          child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
-            child: isFront
-                ? Text(eng.isEmpty ? "" : eng[i])
-                : Text(viet.isEmpty ? "" : viet[i]),
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Transform(
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.001)
+                  ..rotateY(_rotation.value),
+                alignment: Alignment.center,
+                child: _buildCard(isFront
+                    ? (eng.isEmpty ? "" : eng[i])
+                    : (viet.isEmpty ? "" : viet[i])),
+              );
+            },
           ),
         ),
         SizedBox(height: 20),
@@ -93,11 +118,25 @@ class _FlashCardModeState extends State<FlashCardMode> {
           children: [
             ElevatedButton(
               onPressed: () {
+                _controller.isCompleted
+                    ? _controller.reverse()
+                    : _controller.forward();
                 setState(() {
-                  isFront = !isFront;
+                  if (i < eng.length - 1) {
+                    isFront = !isFront;
+                  }
                 });
               },
-              child: Text('Flip'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Màu nền của button
+              ),
+              child: Text(
+                'Flip',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
             ),
             SizedBox(width: 20),
             ElevatedButton(
@@ -106,14 +145,74 @@ class _FlashCardModeState extends State<FlashCardMode> {
                   if (i < eng.length - 1) {
                     i++;
                     isFront = true;
-                  } else {}
+                  }
                 });
               },
-              child: Text('Next'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Màu nền của button
+              ),
+              child: Text(
+                'Next',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
             ),
           ],
         ),
       ],
     );
+  }
+
+  Widget _buildCard(String text) {
+    return Container(
+      width: 400,
+      height: 300,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.black),
+      ),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.center,
+              child: Transform(
+                transform: _rotation.value > pi / 2
+                    ? Matrix4.rotationY(pi)
+                    : Matrix4.rotationY(0),
+                alignment: Alignment.center,
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _speakEnglish() async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.speak(eng[i]);
+  }
+
+  void _speakVietnamese() async {
+    await flutterTts.setLanguage("vi-VN");
+    await flutterTts.speak(viet[i]);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

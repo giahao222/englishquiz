@@ -26,7 +26,7 @@ class _ConnectWordState extends State<ConnectWord> {
   late List<String> des;
   late List<String> quesChange;
   late List<bool> arrayList;
-  late List<String> userAnswers; // Thêm danh sách câu trả lời của người dùng
+  late List<String> userAnswers;
   late int i;
   late double score;
 
@@ -98,9 +98,7 @@ class _ConnectWordState extends State<ConnectWord> {
     return Column(
       children: [
         SizedBox(height: 20),
-        if (ques != null && i < ques.length) Text('Question: ${ques[i]}'),
-        SizedBox(height: 20),
-        if (des != null && i < des.length) Text('Description: ${des[i]}'),
+        if (ques != null && i < ques.length) _buildCard(),
         SizedBox(height: 20),
         TextField(
           controller: _textEditingController,
@@ -111,11 +109,63 @@ class _ConnectWordState extends State<ConnectWord> {
         SizedBox(height: 20),
         ElevatedButton(
           onPressed: _checkAnswer,
-          child: Text('Check'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+          ),
+          child: Text(
+            'Check',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
         ),
         SizedBox(height: 20),
         Text('Your score: $score'),
       ],
+    );
+  }
+
+  Widget _buildCard() {
+    return Container(
+      width: 500,
+      height: 300,
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Card(
+        elevation: 4,
+        color: Colors.blue,
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Question:',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              SizedBox(height: 10),
+              Text(
+                ques[i],
+                style: TextStyle(fontSize: 30, color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Hint:',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              SizedBox(height: 10),
+              Text(
+                des[i],
+                style: TextStyle(fontSize: 16, color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:englishquiz/screens/activity/ConnectWord.dart';
+import 'package:englishquiz/screens/activity/FlashCardMode.dart';
 import 'package:englishquiz/screens/activity/Quizzle.dart';
 import 'package:englishquiz/screens/activity/WriteAnswer.dart';
 
@@ -36,8 +37,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  Get.put(FirebaseService());
-  Get.put(TopicController());
+  // Get.put(FirebaseService());
+  // Get.put(TopicController());
   runApp(const MyApp());
 }
 
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: FlashCardMode(topic: 'Job', mode: 'easy'),
       debugShowCheckedModeBanner: false,
       getPages: [
         GetPage(name: '/add-topic', page: () => AddTopic()),
