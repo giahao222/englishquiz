@@ -1,5 +1,7 @@
 import 'package:englishquiz/screens/home/Home.dart';
+import 'package:englishquiz/screens/home/HomeFragment.dart';
 import 'package:englishquiz/screens/home/MainScreen.dart';
+import 'package:englishquiz/screens/home/MyCustomScrollBehavior.dart';
 import 'package:englishquiz/screens/library/AddTopic.dart';
 import 'package:englishquiz/screens/library/InTopic.dart';
 import 'package:englishquiz/screens/library/MyTopics.dart';
@@ -36,12 +38,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      scrollBehavior: MyCustomScrollBehavior(),
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MainScreen(),
+      home: HomeFragment(),
       debugShowCheckedModeBanner: false,
       getPages: [
         GetPage(name: '/add-topic', page: () => AddTopic()),
