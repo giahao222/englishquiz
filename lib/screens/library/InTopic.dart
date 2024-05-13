@@ -3,6 +3,7 @@ import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/models/WordPair.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,10 +18,9 @@ class InTopicController extends GetxController {
   var vieWord = '';
   var listCard = <WordPair>[].obs;
   Topic topic = Topic('', '', '', '', false, false, {});
-  final id = Get.arguments;
+  final id = Get.arguments['topicId'];
   final FirebaseService _firebaseService = Get.find();
-  // final _creator = FirebaseAuth.instance.currentUser!.displayName??'Unknown';
-
+  final _creator = FirebaseAuth.instance.currentUser!.uid;
   final nameController = TextEditingController();
   final imageController = TextEditingController();
 
@@ -76,8 +76,8 @@ class InTopicController extends GetxController {
           duration: Duration(seconds: 2));
       return;
     }
-    Topic topic = Topic(id, name.value, 'Unknown', image.value,
-        isPublic.value, isEngType.value, _listCardToJson(listCard));
+    Topic topic = Topic(id, name.value, _creator, image.value, isPublic.value,
+        isEngType.value, _listCardToJson(listCard));
     await _firebaseService.updateData('Topics/$id', topic.toJson());
     Get.back();
   }
@@ -92,6 +92,7 @@ class InTopicController extends GetxController {
 
   void deleteTopic() async {
     await _firebaseService.removeData('Topics/$id');
+    Get.back();
     Get.back();
     Get.back();
   }
