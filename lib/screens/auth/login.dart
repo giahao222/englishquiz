@@ -5,9 +5,9 @@ import 'package:englishquiz/screens/home/ModeLearn.dart';
 import 'package:englishquiz/screens/home/home.dart';
 import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:englishquiz/screens/auth/forgot_password.dart';
-import 'package:englishquiz/screens/home/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -138,10 +138,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       // Đăng ký thành công
       // Chuyển hướng đến trang chính
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage(displayName: user.displayName ?? email,)),
-      );
+      Get.toNamed('/home');
       print("User is successfully Signed In!");
     } else {
       // Đăng ký thất bại

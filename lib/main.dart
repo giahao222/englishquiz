@@ -1,3 +1,4 @@
+import 'package:englishquiz/screens/auth/login.dart';
 import 'package:englishquiz/screens/home/Home.dart';
 import 'package:englishquiz/screens/home/MainScreen.dart';
 import 'package:englishquiz/screens/library/AddTopic.dart';
@@ -41,11 +42,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MainScreen(),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false,
       getPages: [
         GetPage(name: '/add-topic', page: () => AddTopic()),
         GetPage(name: '/topic', page: () => InTopic()),
+        GetPage(name: '/home', page: () => MainScreen()),
       ],
     );
   }
