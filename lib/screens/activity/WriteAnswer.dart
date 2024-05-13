@@ -41,7 +41,6 @@ class _WriteAnswerState extends State<WriteAnswer> {
         for (var item in dataList) {
           if (item is Map<String, dynamic>) {
             String word = item['word'] ?? '';
-
             String meaning_vi = item['meaning_vi'] ?? '';
             setState(() {
               ques.add(meaning_vi);
@@ -71,7 +70,12 @@ class _WriteAnswerState extends State<WriteAnswer> {
   }
 
   Widget _buildEmpty() {
-    return Text("");
+    return Center(
+      child: Text(
+        'No questions available or quiz completed!',
+        style: TextStyle(fontSize: 20),
+      ),
+    );
   }
 
   Widget _buildBody() {
@@ -121,7 +125,7 @@ class _WriteAnswerState extends State<WriteAnswer> {
       _nextQuestion();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Complete!')),
+        SnackBar(content: Text('Quiz Completed!')),
       );
     }
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
+import 'Result.dart';
 
 class Quizzle extends StatefulWidget {
   final String topic;
@@ -131,35 +132,18 @@ class _QuizzleState extends State<Quizzle> {
       onPressed: () {
         setState(() {
           selectedAnswer = text;
-          _checkAnswer();
+          _checkAnswer(selectedAnswer);
         });
       },
       child: Text(text),
     );
   }
 
-  void _checkAnswer() {
+  void _checkAnswer(String selectedAnswer) {
     if (selectedAnswer == ans[i]) {
       setState(() {
         score += (10.0 / ans.length);
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Correct Answer!'),
-          duration: Duration(
-            seconds: 1,
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Incorrect Answer!'),
-          duration: Duration(
-            seconds: 1,
-          ),
-        ),
-      );
     }
     _nextQuestion();
   }
@@ -170,9 +154,21 @@ class _QuizzleState extends State<Quizzle> {
       selectedAnswer = '';
     });
     if (i == ans.length) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Quiz Complete!')),
-      );
+      _showResult();
     }
+  }
+
+  void _showResult() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Result(
+          questions: ques,
+          userAnswers:
+              List.from(ans), // Chuyển userAnswers thành một bản sao của ans
+          correctAnswers: ans,
+        ),
+      ),
+    );
   }
 }

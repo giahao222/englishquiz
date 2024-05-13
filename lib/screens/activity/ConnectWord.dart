@@ -1,8 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:englishquiz/screens/object/ResultItem.dart';
-import 'package:englishquiz/screens/activity/ResultActivity.dart';
 import 'dart:math';
+import 'Result.dart';
 
 class ConnectWord extends StatefulWidget {
   final String topic;
@@ -15,10 +14,9 @@ class ConnectWord extends StatefulWidget {
 }
 
 String shuffleStringWithSlash(String input) {
-  List<String> characters =
-      input.split(''); // Chuyển chuỗi thành danh sách các ký tự
-  characters.shuffle(); // Xáo trộn các ký tự
-  return characters.join('/'); // Kết hợp lại thành một chuỗi mới với dấu /
+  List<String> characters = input.split('');
+  characters.shuffle();
+  return characters.join('/');
 }
 
 class _ConnectWordState extends State<ConnectWord> {
@@ -27,9 +25,8 @@ class _ConnectWordState extends State<ConnectWord> {
   late List<String> ans;
   late List<String> des;
   late List<String> quesChange;
-  late List<String> answerResult;
   late List<bool> arrayList;
-  late ResultItem resultItem;
+  late List<String> userAnswers; // Thêm danh sách câu trả lời của người dùng
   late int i;
   late double score;
 
@@ -42,8 +39,8 @@ class _ConnectWordState extends State<ConnectWord> {
     ans = [];
     des = [];
     quesChange = [];
-    answerResult = [];
     arrayList = [];
+    userAnswers = [];
     DatabaseReference voc = FirebaseDatabase.instance
         .reference()
         .child("home")
@@ -123,10 +120,9 @@ class _ConnectWordState extends State<ConnectWord> {
   }
 
   void _checkAnswer() {
-    String answer = _textEditingController.text; // Get the entered answer
-    answerResult.add(answer);
+    String answer = _textEditingController.text;
+    userAnswers.add(answer);
 
-    // Check the answer and update score
     if (answer.toLowerCase() == ans[i].toLowerCase()) {
       setState(() {
         score += 10.0 / ans.length;
@@ -138,7 +134,6 @@ class _ConnectWordState extends State<ConnectWord> {
       });
     }
 
-    // Move to the next question
     if (i < ans.length - 1) {
       setState(() {
         i++;
@@ -146,16 +141,20 @@ class _ConnectWordState extends State<ConnectWord> {
         quesChange.add(ques[i]);
       });
     } else {
-      //_showResult();
+      _showResult();
     }
   }
 
   void _showResult() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ResultActivity(resultItem: resultItem),
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Result(
+          questions: ques,
+          userAnswers: userAnswers,
+          correctAnswers: ans,
+        ),
+      ),
+    );
   }
 }

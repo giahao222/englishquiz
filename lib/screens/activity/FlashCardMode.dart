@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:englishquiz/screens/object/ResultItem.dart';
-import 'package:englishquiz/screens/activity/ResultActivity.dart';
+import 'package:englishquiz/screens/activity/Result.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
 

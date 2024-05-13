@@ -1,3 +1,5 @@
+import 'package:englishquiz/screens/activity/ConnectWord.dart';
+import 'package:englishquiz/screens/activity/Quizzle.dart';
 import 'package:englishquiz/screens/home/Home.dart';
 import 'package:englishquiz/screens/home/HomeFragment.dart';
 import 'package:englishquiz/screens/home/MainScreen.dart';
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomeFragment(),
+      home: Quizzle(topic: 'Job', mode: 'easy'),
       debugShowCheckedModeBanner: false,
       getPages: [
         GetPage(name: '/add-topic', page: () => AddTopic()),
