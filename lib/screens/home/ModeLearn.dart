@@ -111,12 +111,12 @@ class ModeLearn extends StatelessWidget {
           mode: "easy",
         );
         break;
-      case 'write':
-        destinationWidget = WriteAnswer(
-          topic: "Job",
-          mode: "easy",
-        );
-        break;
+      // case 'write':
+      //   destinationWidget = WriteAnswer(
+      //     topic: "Job",
+      //     mode: "easy",
+      //   );
+      //   break;
       default:
     }
 
