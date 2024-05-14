@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:englishquiz/models/Topic.dart';
+import 'package:englishquiz/screens/library/MyFolder.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -11,7 +12,7 @@ import 'package:get/get.dart';
 class TopicController extends GetxController {
   var topics = <Topic>[].obs;
   var isLoading = true.obs;
-  // var userId = FirebaseAuth.instance.currentUser!.uid;
+  late String? userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void onInit() {
@@ -25,6 +26,7 @@ class TopicController extends GetxController {
       var topicRef = FirebaseDatabase.instance.ref().child('Topics');
       topicRef.onValue.listen((event) {
         if (event.snapshot.value == null) {
+          topics.value = [];
           return;
         }
         Map<String, dynamic> data =
@@ -59,6 +61,8 @@ class MyTopics extends StatelessWidget {
           return Center(
             child: CircularProgressIndicator(),
           );
+        } else if (topicController.topics.isEmpty) {
+          return PageEmpty();
         } else {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -105,7 +109,7 @@ class TopicItemCard extends StatelessWidget {
         Get.toNamed('mode-learn', arguments: {
           'topicId': topic.id,
           'name': topic.name,
-          'mode':'user'
+          'mode': 'user'
         });
       },
       child: Card(

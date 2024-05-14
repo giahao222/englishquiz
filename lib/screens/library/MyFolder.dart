@@ -150,22 +150,7 @@ class MyFolder extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else if (folderController.folders.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.sync,
-                  size: 100,
-                  color: Colors.grey,
-                ),
-                Text(
-                  'No Folder',
-                  style: TextStyle(color: Colors.grey, fontSize: 20),
-                )
-              ],
-            ),
-          );
+          return PageEmpty();
         } else {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -307,6 +292,32 @@ class MyFolder extends StatelessWidget {
           folderController.addFolder(context);
         },
         child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class PageEmpty extends StatelessWidget {
+  const PageEmpty({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.folder_open_rounded,
+            size: 100,
+            color: Colors.grey,
+          ),
+          Text(
+            'Empty',
+            style: TextStyle(color: Colors.grey, fontSize: 20),
+          )
+        ],
       ),
     );
   }

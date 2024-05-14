@@ -157,7 +157,7 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          print(homeController.publicTopics);
+          print(topicController.userId);
         },
         child: Icon(Icons.add),
       ),
