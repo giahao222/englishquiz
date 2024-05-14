@@ -101,26 +101,56 @@ class _QuizzleState extends State<Quizzle> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(height: 20),
-        Text(
-          'Question: ${ques[i]}',
-          style: TextStyle(fontSize: 20),
+        Container(
+          height: 300,
+          width: MediaQuery.of(context).size.width * 0.6,
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Center(
+            child: Text(
+              '${ques[i]}',
+              style: TextStyle(fontSize: 60, color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
         SizedBox(height: 20),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildAnswerButton(answers[0]),
-            SizedBox(width: 20),
-            _buildAnswerButton(answers[1]),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: _buildAnswerButton(answers[0]),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: _buildAnswerButton(answers[1]),
+              ),
+            ),
           ],
         ),
         SizedBox(height: 20),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildAnswerButton(answers[2]),
-            SizedBox(width: 20),
-            _buildAnswerButton(answers[3]),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: _buildAnswerButton(answers[2]),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                child: _buildAnswerButton(answers[3]),
+              ),
+            ),
           ],
         ),
       ],
@@ -131,12 +161,20 @@ class _QuizzleState extends State<Quizzle> {
     return ElevatedButton(
       onPressed: () {
         setState(() {
-          userAnswers
-              .add(text); // Thêm câu trả lời của người dùng vào danh sách
+          userAnswers.add(text);
           _checkAnswer(text);
         });
       },
-      child: Text(text),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue,
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+        ),
+      ),
     );
   }
 
@@ -164,8 +202,7 @@ class _QuizzleState extends State<Quizzle> {
       MaterialPageRoute(
         builder: (context) => Result(
           questions: ques,
-          userAnswers: List.from(
-              userAnswers), // Chuyển danh sách câu trả lời của người dùng vào Result
+          userAnswers: List.from(userAnswers),
           correctAnswers: ans,
         ),
       ),
