@@ -45,6 +45,7 @@ class Result extends StatelessWidget {
                           color: isCorrect ? Colors.green : Colors.red,
                         ),
                       ),
+                      Divider(),
                     ],
                   ),
                   trailing: Icon(

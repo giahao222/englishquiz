@@ -1,4 +1,5 @@
 import 'package:englishquiz/screens/activity/ConnectWord.dart';
+import 'package:englishquiz/screens/activity/FlashCardMode.dart';
 import 'package:englishquiz/screens/activity/Quizzle.dart';
 import 'package:englishquiz/screens/activity/WriteAnswer.dart';
 

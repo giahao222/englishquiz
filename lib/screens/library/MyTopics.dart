@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class TopicController extends GetxController {
-  var topics = [].obs;
+  var topics = <Topic>[].obs;
   var isLoading = true.obs;
   // var userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -29,12 +29,6 @@ class TopicController extends GetxController {
         }
         Map<String, dynamic> data =
             event.snapshot.value as Map<String, dynamic>;
-        // Map<String, dynamic> myTopic = {};
-        // data.forEach((key, value) {
-        //   if (value['userId'] == userId) {
-        //     myTopic[key] = value;
-        //   }
-        // });
         topics.value = _convertToListTopic(data);
       });
     } finally {
@@ -94,7 +88,7 @@ class MyTopics extends StatelessWidget {
 }
 
 class TopicItemCard extends StatelessWidget {
-  var fontSize;
+  double fontSize;
 
   TopicItemCard({
     super.key,

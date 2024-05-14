@@ -1,23 +1,24 @@
 import 'package:englishquiz/models/Folder.dart';
 import 'package:englishquiz/models/Topic.dart';
+import 'package:englishquiz/screens/library/MyTopics.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:englishquiz/utils/UniqueIdGenerator.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class FolderController extends GetxController {
   var folders = <Folder>[].obs;
   var isLoading = true.obs;
   var nameFolder = ''.obs;
-  var listTopic = <Topic>[].obs;
   var enableAddTopic = false.obs;
   final FirebaseService _firebaseService = Get.find();
+  final TopicController _topicController = Get.find();
+  
+
   @override
   void onInit() {
     fetchFolders();
-    fetchTopics();
     super.onInit();
   }
 
@@ -38,35 +39,8 @@ class FolderController extends GetxController {
     }
   }
 
-  void fetchTopics() {
-    try {
-      isLoading(true);
-      var topicRef = FirebaseDatabase.instance.ref().child('Topics');
-      topicRef.onValue.listen((event) {
-        if (event.snapshot.value == null) {
-          return;
-        }
-        Map<String, dynamic> data =
-            event.snapshot.value as Map<String, dynamic>;
-        listTopic.value = _convertToListTopic(data);
-      });
-    } finally {
-      isLoading(false);
-    }
-  }
-
-  List<Topic> _convertToListTopic(Map<dynamic, dynamic> data) {
-    List<Topic> topics = [];
-    if(data == null) return List<Topic>.empty(growable: true);
-    data.forEach((key, value) {
-      topics.add(Topic.fromJson(value));
-    });
-    return topics;
-  }
-
-  List<Folder> _convertToListFolder(Map<dynamic, dynamic> data) {
+  List<Folder> _convertToListFolder(Map<String, dynamic> data) {
     List<Folder> folders = [];
-    if(data == null) return List<Folder>.empty(growable: true);
     data.forEach((key, value) {
       folders.add(Folder.fromJson(key, value));
     });
@@ -78,6 +52,7 @@ class FolderController extends GetxController {
   }
 
   void deleteFolder(String folderId) {
+    folders.removeWhere((element) => element.id == folderId);
     _firebaseService.removeData('Folders/$folderId');
   }
 
@@ -96,30 +71,18 @@ class FolderController extends GetxController {
             TextButton(
               onPressed: () {
                 String folderId = UniqueIdGenerator().generateUniqueId();
-                String topicId = UniqueIdGenerator().generateUniqueId();
                 var data = {
                   'id': folderId,
                   'name': nameFolder.value,
-                  'topics': {
-                    topicId: {
-                      'id': topicId,
-                      'name': 'No Topic',
-                      'creator': 'Unknown',
-                      'image': 'https://picsum.photos/200',
-                      'isEngType': true,
-                      'isPublic': false,
-                      'list_vocab': {'ok': 'oke', 'sleep': 'ng'}
-                    }
-                  }
                 };
                 _firebaseService.addData('Folders/$folderId', data);
-                Navigator.of(context).pop();
+                Get.back();
               },
               child: const Text('Add'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Get.back();
               },
               child: const Text('Cancel'),
             ),
@@ -139,7 +102,7 @@ class FolderController extends GetxController {
           title: const Text('Add Topic to Folder'),
           content: SingleChildScrollView(
             child: Column(
-              children: listTopic.map((topic) {
+              children: _topicController.topics.map((topic) {
                 return Obx(() => CheckboxListTile(
                       title: Text(topic.name),
                       value: topics.contains(topic),
@@ -167,15 +130,7 @@ class FolderController extends GetxController {
 
   void addTopicToFolderDb(Folder folder, List<Topic> topics) {
     for (var topic in topics) {
-      var data = {
-        'id': topic.id,
-        'name': topic.name,
-        'creator': topic.creator,
-        'image': topic.image,
-        'isEngType': topic.isEngType,
-        'isPublic': topic.isPublic,
-        'list_vocab': topic.listVocab
-      };
+      var data = topic.toJson();
       _firebaseService.addData('Folders/${folder.id}/topics/${topic.id}', data);
     }
   }
@@ -235,7 +190,7 @@ class MyFolder extends StatelessWidget {
                             return () {
                               folderController.addTopicToFolderDb(
                                   folderController.folders[index], topics);
-                              Navigator.of(context).pop();
+                              Get.back();
                             };
                           });
                         },
@@ -257,13 +212,13 @@ class MyFolder extends StatelessWidget {
                                     onPressed: () {
                                       folderController.deleteFolder(
                                           folderController.folders[index].id);
-                                      Navigator.of(context).pop();
+                                      Get.back();
                                     },
                                     child: const Text('Yes'),
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context).pop();
+                                      Get.back();
                                     },
                                     child: const Text('No'),
                                   ),
@@ -276,14 +231,13 @@ class MyFolder extends StatelessWidget {
                     ],
                   ),
                   children: [
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: folderController.folders[index].mTopic.length,
-                      itemBuilder: (context, indexTopic) {
-                        if (folderController
-                                .folders[index].mTopic[indexTopic].name !=
-                            'No Topic') {
+                    if (folderController.folders[index].mTopic.isNotEmpty)
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount:
+                            folderController.folders[index].mTopic.length,
+                        itemBuilder: (context, indexTopic) {
                           return ListTile(
                               title: Text(folderController
                                   .folders[index].mTopic[indexTopic].name),
@@ -319,13 +273,13 @@ class MyFolder extends StatelessWidget {
                                                           .folders[index]
                                                           .mTopic[indexTopic]
                                                           .id);
-                                              Navigator.of(context).pop();
+                                              Get.back();
                                             },
                                             child: const Text('Yes'),
                                           ),
                                           TextButton(
                                             onPressed: () {
-                                              Navigator.of(context).pop();
+                                              Get.back();
                                             },
                                             child: const Text('No'),
                                           ),
@@ -335,13 +289,12 @@ class MyFolder extends StatelessWidget {
                                   );
                                 },
                               ));
-                        }
-                      },
-                      separatorBuilder: (context, index) => const Divider(
-                        height: 1,
-                        color: Colors.grey,
-                      ),
-                    )
+                        },
+                        separatorBuilder: (context, index) => const Divider(
+                          height: 1,
+                          color: Colors.grey,
+                        ),
+                      )
                   ],
                 );
               },
