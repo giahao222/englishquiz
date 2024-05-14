@@ -1,3 +1,4 @@
+import 'package:englishquiz/screens/home/MainScreen.dart';
 import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:englishquiz/screens/home/home.dart';
 import 'package:englishquiz/screens/auth/login.dart';
@@ -150,7 +151,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         // Chuyển hướng đến trang chính sau khi tạo tài khoản thành công
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => MainScreen()),
         );
 
         print("User is successfully created!");
