@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:csv/csv.dart';
 import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/models/WordPair.dart';
@@ -28,8 +30,9 @@ class InTopicController extends GetxController {
   void onInit() {
     super.onInit();
     DatabaseReference ref = FirebaseDatabase.instance.ref('Topics').child(id);
-    ref.onValue.listen((event) {
-      final data = event.snapshot.value as Map<dynamic, dynamic>;
+    ref.onValue.listen((event) async {
+      if (event.snapshot.value == null) return;
+      final data = event.snapshot.value as Map<String, dynamic>;
       topic = Topic.fromJson(data);
       isPublic.value = topic.isPublic;
       name.value = topic.name;
@@ -92,6 +95,22 @@ class InTopicController extends GetxController {
 
   void deleteTopic() async {
     await _firebaseService.removeData('Topics/$id');
+    DatabaseReference ref = FirebaseDatabase.instance.ref('Folders');
+    DataSnapshot snapshot = await ref.get();
+    if (snapshot.exists) {
+      Map<String, dynamic> folders = snapshot.value as Map<String, dynamic>;
+      folders.forEach((folderKey, folderValue) {
+      if (folderValue['topics'] != null) {
+        Map<dynamic, dynamic> topics = folderValue['topics'] as Map<dynamic, dynamic>;
+
+        topics.forEach((topicKey, topicValue) {
+          if (topicValue['id'] == id) {
+            ref.child(folderKey).child('topics').child(topicKey).remove();
+          }
+        });
+      }
+    });
+    }
     Get.back();
     Get.back();
     Get.back();
@@ -105,10 +124,6 @@ class InTopicController extends GetxController {
   // Function to remove card
   void removeCard(int index) {
     listCard.removeAt(index);
-    for (int i = 0; i < listCard.length; i++) {
-      print(
-          'Card $i: ${listCard[i].english.value} - ${listCard[i].vietnamese.value}');
-    }
   }
 
   String? textValidator(String value) {
