@@ -37,8 +37,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Get.put(FirebaseService());
-  // Get.put(TopicController());
+  Get.put(FirebaseService());
+  Get.put(TopicController());
   runApp(const MyApp());
 }
 
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: FlashCardMode(topic: 'Job', mode: 'easy'),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false,
       getPages: [
         GetPage(name: '/add-topic', page: () => AddTopic()),
