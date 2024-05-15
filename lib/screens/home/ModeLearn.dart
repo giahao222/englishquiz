@@ -4,17 +4,16 @@ import 'package:englishquiz/screens/activity/Quizzle.dart';
 import 'package:englishquiz/screens/activity/WriteAnswer.dart';
 import 'package:englishquiz/screens/auth/login.dart';
 import 'package:englishquiz/screens/home/ModeLearning.dart';
-import 'package:englishquiz/screens/home/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ModeLearnController extends GetxController {
-  String topicId = Get.arguments['topicId'];
+  final String topicId = Get.arguments['topicId'];
+  final String name = Get.arguments['name'];
+  final String mode = Get.arguments['mode'];
 }
 
 class ModeLearn extends StatelessWidget {
-  final String? name = Get.arguments?['name'];
-  final String? mode = Get.arguments?['mode'];
   final ModeLearnController controller = Get.put(ModeLearnController());
 
   ModeLearn({super.key});
@@ -24,6 +23,12 @@ class ModeLearn extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mode Learn'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.edit_rounded),
@@ -75,7 +80,7 @@ class ModeLearn extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                SizedBox(height: 8), // Khoảng cách giữa ảnh và tiêu đề
+                SizedBox(height: 8),
                 Text(
                   modeLearning.name,
                   style: TextStyle(
@@ -93,40 +98,40 @@ class ModeLearn extends StatelessWidget {
 
   void _navigateToSelectedMode(
       BuildContext context, ModeLearning modeLearning) {
-    Widget destinationWidget = LoginPage();
+    Widget destinationWidget;
 
     switch (modeLearning.id) {
       case 'quizz':
-        destinationWidget = Quizzle(topic: "Job", mode: "easy");
+        destinationWidget = Quizzle(
+          topic: controller.name,
+          mode: controller.mode,
+        );
         break;
       case 'flipcard':
         destinationWidget = FlashCardMode(
-          topic: "Job",
-          mode: "easy",
+          topic: controller.name,
+          mode: controller.mode,
         );
         break;
       case 'connect':
         destinationWidget = ConnectWord(
-          topic: "Job",
-          mode: "easy",
+          topic: controller.name,
+          mode: controller.mode,
         );
         break;
       case 'write':
         destinationWidget = WriteAnswer(
-          topic: "Job",
-          mode: "easy",
+          topic: controller.name,
+          mode: controller.mode,
         );
         break;
       default:
+        destinationWidget = LoginPage();
     }
 
-    if (destinationWidget != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => destinationWidget),
-      );
-    } else {
-      print('Destination not found for mode: ${modeLearning.id}');
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => destinationWidget),
+    );
   }
 }

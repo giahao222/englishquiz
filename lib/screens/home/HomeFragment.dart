@@ -1,10 +1,16 @@
-import 'package:englishquiz/screens/home/MyCustomScrollBehavior.dart';
+import 'package:englishquiz/screens/activity/ConnectWord.dart';
+import 'package:englishquiz/screens/activity/FlashCardMode.dart';
+import 'package:englishquiz/screens/activity/Quizzle.dart';
+import 'package:englishquiz/screens/activity/WriteAnswer.dart';
+import 'package:englishquiz/screens/auth/login.dart';
+import 'package:englishquiz/screens/home/ModeLearn.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'Folder.dart';
 import 'Topic.dart';
+import 'package:get/get.dart';
 
 class HomeFragment extends StatefulWidget {
   @override
@@ -45,6 +51,15 @@ class _HomeFragmentState extends State<HomeFragment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Container(
         child: _buildListView(),
       ),
@@ -97,36 +112,78 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
   Widget _buildTopicCard(Topic topic) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Container(
-          width: 400,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image.asset(
-                'assets/connect.png',
-                height: 100.0,
-                width: 100.0,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                topic.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () => _showDifficultyDialog(context, topic),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Container(
+            width: 400,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/connect.png',
+                  height: 100.0,
+                  width: 100.0,
+                  fit: BoxFit.cover,
                 ),
-              ),
-              Text(
-                topic.des,
-                textAlign: TextAlign.center,
-              ),
-            ],
+                SizedBox(height: 8.0),
+                Text(
+                  topic.name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  topic.des,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _showDifficultyDialog(BuildContext context, Topic topic) async {
+    final mode = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('Select Difficulty'),
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context, 'easy');
+              },
+              child: const Text('Easy'),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context, 'medium');
+              },
+              child: const Text('Medium'),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context, 'hard');
+              },
+              child: const Text('Hard'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (mode != null) {
+      Get.to(() => ModeLearn(), arguments: {
+        'name': topic.name,
+        'mode': mode,
+        'topicId': topic.id,
+      });
+    }
   }
 
   void _getData() async {

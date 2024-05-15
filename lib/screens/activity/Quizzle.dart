@@ -20,7 +20,7 @@ class _QuizzleState extends State<Quizzle> {
   late List<String> rand;
   late int i;
   late double score;
-  late List<String> userAnswers; // Danh sách chứa câu trả lời của người dùng
+  late List<String> userAnswers;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _QuizzleState extends State<Quizzle> {
     rand = [];
     i = 0;
     score = 0.0;
-    userAnswers = []; // Khởi tạo danh sách câu trả lời của người dùng
+    userAnswers = [];
     DatabaseReference voc = databaseReference
         .child("home")
         .child("mode")

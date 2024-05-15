@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:englishquiz/models/Topic.dart';
+import 'package:englishquiz/screens/home/HomeFragment.dart';
 import 'package:englishquiz/screens/library/MyTopics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -157,7 +158,12 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          print(topicController.userId);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeFragment(),
+            ),
+          );
         },
         child: Icon(Icons.add),
       ),

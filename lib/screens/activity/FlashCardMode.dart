@@ -128,7 +128,7 @@ class _FlashCardModeState extends State<FlashCardMode>
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Màu nền của button
+                backgroundColor: Colors.blue,
               ),
               child: Text(
                 'Flip',
@@ -149,7 +149,7 @@ class _FlashCardModeState extends State<FlashCardMode>
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Màu nền của button
+                backgroundColor: Colors.blue,
               ),
               child: Text(
                 'Next',
