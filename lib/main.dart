@@ -4,6 +4,7 @@ import 'package:englishquiz/screens/activity/Quizzle.dart';
 import 'package:englishquiz/screens/activity/WriteAnswer.dart';
 
 import 'package:englishquiz/screens/auth/login.dart';
+import 'package:englishquiz/screens/auth/profile.dart';
 
 import 'package:englishquiz/screens/home/Home.dart';
 import 'package:englishquiz/screens/home/HomeFragment.dart';
@@ -38,7 +39,6 @@ Future<void> main() async {
   );
 
   Get.put(FirebaseService());
-  Get.put(TopicController());
   runApp(const MyApp());
 }
 

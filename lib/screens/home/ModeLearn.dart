@@ -5,11 +5,25 @@ import 'package:englishquiz/screens/activity/WriteAnswer.dart';
 import 'package:englishquiz/screens/auth/login.dart';
 import 'package:englishquiz/screens/home/ModeLearning.dart';
 import 'package:englishquiz/screens/home/Home.dart';
+import 'package:englishquiz/screens/library/MyTopics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ModeLearnController extends GetxController {
   String topicId = Get.arguments['topicId'];
+  final TopicController _topicController = Get.put(TopicController());
+  bool isMyTopic = false;
+
+  @override
+  void onInit() {
+    setIsMyTopic();
+    super.onInit();
+  }
+
+  setIsMyTopic() {
+    isMyTopic = _topicController.userTopics
+        .any((element) => element.id == topicId);
+  }
 }
 
 class ModeLearn extends StatelessWidget {
@@ -25,13 +39,16 @@ class ModeLearn extends StatelessWidget {
       appBar: AppBar(
         title: Text('Mode Learn'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.edit_rounded),
-            onPressed: () {
-              Get.toNamed('/topic', arguments: {
-                'topicId': controller.topicId,
-              });
-            },
+          Visibility(
+            visible: controller.isMyTopic,
+            child: IconButton(
+              icon: Icon(Icons.edit_rounded),
+              onPressed: () {
+                Get.toNamed('/topic', arguments: {
+                  'topicId': controller.topicId,
+                });
+              },
+            ),
           ),
         ],
       ),

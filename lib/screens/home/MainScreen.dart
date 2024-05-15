@@ -1,6 +1,9 @@
+import 'package:englishquiz/screens/auth/login.dart';
+import 'package:englishquiz/screens/auth/profile.dart';
 import 'package:englishquiz/screens/home/BottomNavbarController.dart';
 import 'package:englishquiz/screens/home/Home.dart';
 import 'package:englishquiz/screens/library/Library.dart';
+import 'package:englishquiz/screens/library/MyTopics.dart';
 import 'package:englishquiz/screens/setting/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,11 +12,8 @@ import 'package:get/get.dart';
 class MainScreen extends StatelessWidget {
   final BottomNavBarController bottomNavBarController =
       Get.put(BottomNavBarController());
-  final List<Widget> _pages = [
-    HomePage(),
-    const LibraryPage(),
-    const SettingPage()
-  ];
+  final TopicController _topicController = Get.put(TopicController());
+  final List<Widget> _pages = [HomePage(), const LibraryPage(), ProfilePage()];
   MainScreen({Key? key}) : super(key: key);
 
   @override
@@ -37,8 +37,8 @@ class MainScreen extends StatelessWidget {
               label: 'Library',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
+              icon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
         ),

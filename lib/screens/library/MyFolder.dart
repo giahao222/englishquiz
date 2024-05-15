@@ -13,8 +13,7 @@ class FolderController extends GetxController {
   var nameFolder = ''.obs;
   var enableAddTopic = false.obs;
   final FirebaseService _firebaseService = Get.find();
-  final TopicController _topicController = Get.find();
-  
+  final TopicController _topicController = Get.put(TopicController());
 
   @override
   void onInit() {
@@ -32,7 +31,10 @@ class FolderController extends GetxController {
         }
         Map<String, dynamic> data =
             event.snapshot.value as Map<String, dynamic>;
-        folders.value = _convertToListFolder(data);
+        List<Folder> allFolder = _convertToListFolder(data);
+        folders.value = allFolder
+            .where((element) => element.creator == _topicController.userId)
+            .toList();
       });
     } finally {
       isLoading(false);
@@ -74,6 +76,7 @@ class FolderController extends GetxController {
                 var data = {
                   'id': folderId,
                   'name': nameFolder.value,
+                  'creator': _topicController.userId,
                 };
                 _firebaseService.addData('Folders/$folderId', data);
                 Get.back();
@@ -102,7 +105,7 @@ class FolderController extends GetxController {
           title: const Text('Add Topic to Folder'),
           content: SingleChildScrollView(
             child: Column(
-              children: _topicController.topics.map((topic) {
+              children: _topicController.userTopics.map((topic) {
                 return Obx(() => CheckboxListTile(
                       title: Text(topic.name),
                       value: topics.contains(topic),

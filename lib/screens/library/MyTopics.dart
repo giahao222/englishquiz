@@ -10,9 +10,10 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class TopicController extends GetxController {
+  var userTopics = <Topic>[].obs;
   var topics = <Topic>[].obs;
   var isLoading = true.obs;
-  late String? userId = FirebaseAuth.instance.currentUser!.uid;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void onInit() {
@@ -32,6 +33,9 @@ class TopicController extends GetxController {
         Map<String, dynamic> data =
             event.snapshot.value as Map<String, dynamic>;
         topics.value = _convertToListTopic(data);
+        userTopics.value = topics
+            .where((element) => element.creator == userId)
+            .toList();
       });
     } finally {
       isLoading(false);
@@ -51,7 +55,7 @@ class MyTopics extends StatelessWidget {
   MyTopics({super.key});
 
   final FirebaseService firebaseService = Get.find();
-  final TopicController topicController = Get.find();
+  final TopicController topicController = Get.put(TopicController());
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +65,7 @@ class MyTopics extends StatelessWidget {
           return Center(
             child: CircularProgressIndicator(),
           );
-        } else if (topicController.topics.isEmpty) {
+        } else if (topicController.userTopics.isEmpty) {
           return PageEmpty();
         } else {
           return Padding(
@@ -72,9 +76,9 @@ class MyTopics extends StatelessWidget {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
-              itemCount: topicController.topics.length,
+              itemCount: topicController.userTopics.length,
               itemBuilder: (context, index) {
-                Topic topic = topicController.topics[index];
+                Topic topic = topicController.userTopics[index];
                 return TopicItemCard(topic: topic, fontSize: 24);
               },
             ),

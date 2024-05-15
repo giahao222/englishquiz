@@ -4,9 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
-  final String displayName; // Tên người dùng
+  final String? displayName =
+      FirebaseAuth.instance.currentUser!.displayName;
 
-  const ProfilePage({Key? key, required this.displayName}) : super(key: key);
+ ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +22,13 @@ class ProfilePage extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 50.0,
-              backgroundImage: AssetImage('assets/google.jpg'), // Thay đổi đường dẫn ảnh của bạn tại đây
+              backgroundImage: AssetImage(
+                  'assets/google.jpg'), // Thay đổi đường dẫn ảnh của bạn tại đây
               // Nếu không có ảnh, bạn có thể sử dụng AssetImage('assets/flutter_logo.png') hoặc bất kỳ hình ảnh mặc định nào bạn muốn.
             ),
             SizedBox(height: 20.0),
             Text(
-              displayName,
+              displayName?? "Unknown",
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -86,11 +88,11 @@ class ProfilePage extends StatelessWidget {
       print(e.toString());
     }
   }
+
   void _navigateToChangePassword(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ChangePasswordPage()),
     );
   }
-
 }
