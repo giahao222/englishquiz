@@ -4,10 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
-  final String? displayName =
-      FirebaseAuth.instance.currentUser!.displayName;
+  final String? displayName = FirebaseAuth.instance.currentUser!.displayName;
 
- ProfilePage({super.key});
+  ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class ProfilePage extends StatelessWidget {
             ),
             SizedBox(height: 20.0),
             Text(
-              displayName?? "Unknown",
+              displayName ?? "Unknown",
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -80,9 +79,11 @@ class ProfilePage extends StatelessWidget {
     try {
       await FirebaseAuth.instance.signOut();
       print("Logout successful");
-      Navigator.pushReplacement(
-        context,
+
+      // Use pushAndRemoveUntil to clear the navigation stack
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => LoginPage()),
+            (Route<dynamic> route) => false,
       );
     } catch (e) {
       print(e.toString());
