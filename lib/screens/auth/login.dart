@@ -133,21 +133,62 @@ class _LoginPageState extends State<LoginPage> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    User? user =
-        await _firebaseAuthService.signInWithEmailAndPassword(email, password);
-    if (user != null) {
-      // Đăng ký thành công
-      // Chuyển hướng đến trang chính
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MainScreen()),
+    try {
+      User? user = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+      if (user != null) {
+        // Đăng nhập thành công
+        // Chuyển hướng đến trang chính
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainScreen()),
+        );
+        print("User is successfully Signed In!");
+      } else {
+        // Đăng nhập thất bại do người dùng hoặc mật khẩu không đúng
+        // Hiển thị thông báo lỗi
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Lỗi'),
+              content: Text('Tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Đóng dialog
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        print("Fail to Sign In!");
+      }
+    } catch (e) {
+      print("Error signing in: $e");
+      // Xử lý lỗi khi đăng nhập
+      // Hiển thị thông báo lỗi
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Lỗi'),
+            content: Text('Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Đóng dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
       );
-      print("User is successfully Signed In!");
-    } else {
-      // Đăng ký thất bại
-      print("Fail to Sign In!");
     }
   }
+
 
   void _sendPasswordResetEmail(String email) async {
     try {

@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 class HomeController extends GetxController {
   var isExpanded = {}.obs;
   var publicTopics = <Topic>[].obs;
-  final TopicController topicController = Get.find();
+  final TopicController topicController = Get.put(TopicController());
 
   @override
   void onInit() {
@@ -164,6 +164,9 @@ class HomePage extends StatelessWidget {
               builder: (context) => HomeFragment(),
             ),
           );
+
+          print(topicController.userId);
+          print(topicController.userTopics);
         },
         child: Icon(Icons.add),
       ),

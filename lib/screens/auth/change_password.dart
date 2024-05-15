@@ -1,3 +1,4 @@
+import 'package:englishquiz/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -64,21 +65,72 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     String newPassword = _newPasswordController.text;
     String confirmPassword = _confirmPasswordController.text;
 
-    // Kiểm tra xem mật khẩu mới và xác nhận mật khẩu mới có khớp nhau không
     if (newPassword == confirmPassword) {
       try {
-        await FirebaseAuth.instance.currentUser!.updatePassword(newPassword);
+        User user = FirebaseAuth.instance.currentUser!;
+        String email = user.email!;
+
+        // Reauthenticate user with old password
+        AuthCredential credential = EmailAuthProvider.credential(email: email, password: oldPassword);
+        await user.reauthenticateWithCredential(credential);
+
+        // Update password
+        await user.updatePassword(newPassword);
         print("Password updated successfully!");
-        // Hiển thị thông báo hoặc chuyển hướng người dùng đến trang khác sau khi đổi mật khẩu thành công
+
+        // Sign out the user
+        await FirebaseAuth.instance.signOut();
+
+        // Navigate to login page and remove all previous routes
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => LoginPage()),
+              (Route<dynamic> route) => false,
+        );
+
+        // Show success message after navigation
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Thành công'),
+                content: Text('Đổi mật khẩu thành công.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        });
       } catch (error) {
         print("Failed to update password: $error");
-        // Xử lý lỗi khi đổi mật khẩu không thành công
+
+        // Show error message
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Lỗi'),
+              content: Text('Mật khẩu cũ không chính xác. Vui lòng thử lại.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
-      // Gọi hàm đổi mật khẩu ở đây, bạn có thể sử dụng các phương thức của Firebase Auth hoặc API của bạn
-      // Sau khi thay đổi mật khẩu thành công, bạn có thể chuyển hướng hoặc hiển thị thông báo tương ứng.
-      print('Đổi mật khẩu thành công');
     } else {
-      // Hiển thị thông báo lỗi nếu mật khẩu mới và xác nhận mật khẩu mới không khớp nhau
+      // Show error if new passwords do not match
       showDialog(
         context: context,
         builder: (context) {
@@ -101,7 +153,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   void dispose() {
-    // Cleanup controllers
     _oldPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();

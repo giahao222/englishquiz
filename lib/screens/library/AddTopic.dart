@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:csv/csv.dart';
 import 'package:englishquiz/models/WordPair.dart';
 import 'package:englishquiz/models/Topic.dart';
@@ -26,7 +28,8 @@ class AddTopicController extends GetxController {
       allowedExtensions: ['csv'],
     );
     if (result == null || result.files.single.bytes == null) return;
-    final input = String.fromCharCodes(result.files.first.bytes!);
+    // file csv uft-8
+    final input = utf8.decode(result.files.single.bytes!);
     List<List<dynamic>> csvList = const CsvToListConverter().convert(input);
     for (var row in csvList) {
       if (row.length != 2) {

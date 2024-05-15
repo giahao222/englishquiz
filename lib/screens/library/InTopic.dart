@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:csv/csv.dart';
@@ -23,8 +24,11 @@ class InTopicController extends GetxController {
   final id = Get.arguments['topicId'];
   final FirebaseService _firebaseService = Get.find();
   final _creator = FirebaseAuth.instance.currentUser!.uid;
-  final nameController = TextEditingController();
-  final imageController = TextEditingController();
+  TextEditingController nameController;
+  TextEditingController imageController;
+  InTopicController()
+      : nameController = TextEditingController(),
+        imageController = TextEditingController();
 
   @override
   void onInit() {
@@ -54,7 +58,8 @@ class InTopicController extends GetxController {
       allowedExtensions: ['csv'],
     );
     if (result == null || result.files.single.bytes == null) return;
-    final input = String.fromCharCodes(result.files.first.bytes!);
+    // file csv uft-8
+    final input = utf8.decode(result.files.single.bytes!);
     List<List<dynamic>> csvList = const CsvToListConverter().convert(input);
     for (var row in csvList) {
       if (row.length != 2) {
@@ -83,6 +88,7 @@ class InTopicController extends GetxController {
         isEngType.value, _listCardToJson(listCard));
     await _firebaseService.updateData('Topics/$id', topic.toJson());
     Get.back();
+    Get.back();
   }
 
   Map<String, dynamic> _listCardToJson(RxList<WordPair> listCard) {
@@ -100,16 +106,17 @@ class InTopicController extends GetxController {
     if (snapshot.exists) {
       Map<String, dynamic> folders = snapshot.value as Map<String, dynamic>;
       folders.forEach((folderKey, folderValue) {
-      if (folderValue['topics'] != null) {
-        Map<dynamic, dynamic> topics = folderValue['topics'] as Map<dynamic, dynamic>;
+        if (folderValue['topics'] != null) {
+          Map<dynamic, dynamic> topics =
+              folderValue['topics'] as Map<dynamic, dynamic>;
 
-        topics.forEach((topicKey, topicValue) {
-          if (topicValue['id'] == id) {
-            ref.child(folderKey).child('topics').child(topicKey).remove();
-          }
-        });
-      }
-    });
+          topics.forEach((topicKey, topicValue) {
+            if (topicValue['id'] == id) {
+              ref.child(folderKey).child('topics').child(topicKey).remove();
+            }
+          });
+        }
+      });
     }
     Get.back();
     Get.back();
