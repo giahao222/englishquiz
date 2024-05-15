@@ -29,16 +29,6 @@ class ModeLearn extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit_rounded),
-            onPressed: () {
-              Get.toNamed('/topic', arguments: {
-                'topicId': controller.topicId,
-              });
-            },
-          ),
-        ],
       ),
       body: _buildModeList(context),
     );
