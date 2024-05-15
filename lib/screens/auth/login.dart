@@ -22,6 +22,27 @@ class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false; // Default value for the remember me checkbox
 
   @override
+  void initState() {
+    super.initState();
+    _checkRememberMe();
+  }
+
+  void _checkRememberMe() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _rememberMe = prefs.getBool('rememberMe') ?? false;
+      if (_rememberMe) {
+        String? email = prefs.getString('email');
+        String? password = prefs.getString('password');
+        if (email != null && password != null) {
+          _emailController.text = email;
+          _passwordController.text = password;
+        }
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -63,6 +84,19 @@ class _LoginPageState extends State<LoginPage> {
               // Remember Me and Forgot Password
               Row(
                 children: [
+                  // Remember Me
+                  Checkbox(
+                    value: _rememberMe,
+                    onChanged: (value) {
+                      setState(() {
+                        _rememberMe = value!;
+                        SharedPreferences.getInstance().then((prefs) {
+                          prefs.setBool('rememberMe', _rememberMe);
+                        });
+                      });
+                    },
+                  ),
+                  Text('Remember me'),
                   Spacer(), // Add space between the checkbox and "Quên mật khẩu" text
                   // Forgot Password
                   GestureDetector(
@@ -142,6 +176,14 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(builder: (context) => MainScreen()),
         );
+
+        // Nếu người dùng đã chọn nhớ đăng nhập, lưu thông tin đăng nhập vào SharedPreferences
+        if (_rememberMe) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('email', email);
+          prefs.setString('password', password);
+        }
+
         print("User is successfully Signed In!");
       } else {
         // Đăng nhập thất bại do người dùng hoặc mật khẩu không đúng
@@ -188,7 +230,6 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
-
 
   void _sendPasswordResetEmail(String email) async {
     try {
