@@ -123,7 +123,7 @@ class _HomeFragmentState extends State<HomeFragment> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Image.asset(
-                  'assets/connect.png',
+                  'assets/${_getImage(_imageArray)}.jpg',
                   height: 100.0,
                   width: 100.0,
                   fit: BoxFit.cover,
@@ -148,31 +148,72 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
   Future<void> _showDifficultyDialog(BuildContext context, Topic topic) async {
-    final mode = await showDialog<String>(
+    bool isChanged = false;
+
+    final mode = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (BuildContext context) {
-        return SimpleDialog(
-          title: Text('Select Difficulty'),
-          children: <Widget>[
-            SimpleDialogOption(
-              onPressed: () {
-                Navigator.pop(context, 'easy');
-              },
-              child: const Text('Easy'),
-            ),
-            SimpleDialogOption(
-              onPressed: () {
-                Navigator.pop(context, 'medium');
-              },
-              child: const Text('Medium'),
-            ),
-            SimpleDialogOption(
-              onPressed: () {
-                Navigator.pop(context, 'hard');
-              },
-              child: const Text('Hard'),
-            ),
-          ],
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SimpleDialog(
+              title: Text('Select Difficulty'),
+              children: <Widget>[
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(
+                        context, {'difficulty': 'easy', 'change': isChanged});
+                  },
+                  child: const Text(
+                    'Easy',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(
+                        context, {'difficulty': 'medium', 'change': isChanged});
+                  },
+                  child: const Text(
+                    'Medium',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(
+                        context, {'difficulty': 'hard', 'change': isChanged});
+                  },
+                  child: const Text(
+                    'Hard',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: SwitchListTile(
+                    title: Text(
+                      'Vietnamese to English',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    value: isChanged,
+                    onChanged: (bool value) {
+                      setState(() {
+                        isChanged = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -180,8 +221,9 @@ class _HomeFragmentState extends State<HomeFragment> {
     if (mode != null) {
       Get.to(() => ModeLearn(), arguments: {
         'name': topic.name,
-        'mode': mode,
+        'mode': mode['difficulty'],
         'topicId': topic.id,
+        'change': isChanged,
       });
     }
   }

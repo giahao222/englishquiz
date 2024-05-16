@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
-import 'Result.dart'; // Import lớp Result
+import 'Result.dart';
 
 class WriteAnswer extends StatefulWidget {
   final String topic;
   final String mode;
+  final bool change;
 
-  WriteAnswer({required this.topic, required this.mode});
+  WriteAnswer({required this.topic, required this.mode, required this.change});
 
   @override
   _WriteAnswerState createState() => _WriteAnswerState();
@@ -20,7 +21,7 @@ class _WriteAnswerState extends State<WriteAnswer> {
   late int i;
   late double score;
   final TextEditingController _textEditingController = TextEditingController();
-  List<String> userAnswers = []; // Danh sách câu trả lời của người dùng
+  List<String> userAnswers = [];
 
   @override
   void initState() {
@@ -42,12 +43,21 @@ class _WriteAnswerState extends State<WriteAnswer> {
         List<dynamic> dataList = dataSnapshot as List<dynamic>;
         for (var item in dataList) {
           if (item is Map<String, dynamic>) {
-            String word = item['word'] ?? '';
-            String meaning_vi = item['meaning_vi'] ?? '';
-            setState(() {
-              ques.add(meaning_vi);
-              ans.add(word);
-            });
+            if (widget.change) {
+              String word = item['meaning_vi'] ?? '';
+              String meaning_vi = item['word'] ?? '';
+              setState(() {
+                ques.add(meaning_vi);
+                ans.add(word);
+              });
+            } else {
+              String word = item['word'] ?? '';
+              String meaning_vi = item['meaning_vi'] ?? '';
+              setState(() {
+                ques.add(meaning_vi);
+                ans.add(word);
+              });
+            }
           }
         }
       }

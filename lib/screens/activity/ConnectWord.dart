@@ -6,15 +6,16 @@ import 'Result.dart';
 class ConnectWord extends StatefulWidget {
   final String topic;
   final String mode;
+  final bool change;
 
-  ConnectWord({required this.topic, required this.mode});
+  ConnectWord({required this.topic, required this.mode, required this.change});
 
   @override
   _ConnectWordState createState() => _ConnectWordState();
 }
 
 String shuffleStringWithSlash(String input) {
-  List<String> characters = input.split('');
+  List<String> characters = input.split('').where((c) => c != ' ').toList();
   characters.shuffle();
   return characters.join('/');
 }
@@ -55,17 +56,26 @@ class _ConnectWordState extends State<ConnectWord> {
         List<dynamic> dataList = dataSnapshot as List<dynamic>;
         for (var item in dataList) {
           if (item is Map<String, dynamic>) {
-            String word = item['word'] ?? '';
-            String meaning = shuffleStringWithSlash(word);
-            String desc = item['meaning_en'] ?? '';
-            setState(() {
-              ques.add(meaning);
-              ans.add(word);
-              des.add(desc);
-            });
-
-            print('Word: $word');
-            print('Meaning: $meaning');
+            if (widget.change) {
+              String word = item['meaning_vi'] ?? '';
+              String meaning = shuffleStringWithSlash(word);
+              String desc = item['meaning_en'] ?? '';
+              setState(() {
+                ques.add(meaning);
+                ans.add(word);
+                des.add(desc);
+              });
+              print(word);
+            } else {
+              String word = item['word'] ?? '';
+              String meaning = shuffleStringWithSlash(word);
+              String desc = item['meaning_en'] ?? '';
+              setState(() {
+                ques.add(meaning);
+                ans.add(word);
+                des.add(desc);
+              });
+            }
           } else {
             print('Error: item is not a Map');
           }

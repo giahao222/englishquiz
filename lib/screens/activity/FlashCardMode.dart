@@ -6,8 +6,9 @@ import 'package:flutter_tts/flutter_tts.dart';
 class FlashCardMode extends StatefulWidget {
   final String topic;
   final String mode;
-
-  FlashCardMode({required this.topic, required this.mode});
+  final bool change;
+  FlashCardMode(
+      {required this.topic, required this.mode, required this.change});
 
   @override
   _FlashCardModeState createState() => _FlashCardModeState();
@@ -47,12 +48,21 @@ class _FlashCardModeState extends State<FlashCardMode>
         List<dynamic> dataList = dataSnapshot as List<dynamic>;
         for (var item in dataList) {
           if (item is Map<String, dynamic>) {
-            String word = item['word'] ?? '';
-            String meaning_vi = item['meaning_vi'] ?? '';
-            setState(() {
-              viet.add(meaning_vi);
-              eng.add(word);
-            });
+            if (widget.change) {
+              String word = item['meaning_vi'] ?? '';
+              String meaning_vi = item['word'] ?? '';
+              setState(() {
+                viet.add(meaning_vi);
+                eng.add(word);
+              });
+            } else {
+              String word = item['word'] ?? '';
+              String meaning_vi = item['meaning_vi'] ?? '';
+              setState(() {
+                viet.add(meaning_vi);
+                eng.add(word);
+              });
+            }
           }
         }
       }
@@ -86,11 +96,11 @@ class _FlashCardModeState extends State<FlashCardMode>
                 ? _controller.reverse()
                 : _controller.forward();
 
-            if (isFront) {
-              _speakEnglish();
-            } else {
-              _speakVietnamese();
-            }
+            // if (isFront) {
+            //   _speakEnglish();
+            // } else {
+            //   _speakVietnamese();
+            // }
             setState(() {
               if (i < eng.length - 1) {
                 isFront = !isFront;
@@ -160,6 +170,17 @@ class _FlashCardModeState extends State<FlashCardMode>
               ),
             ),
           ],
+        ),
+        SizedBox(height: 20),
+        IconButton(
+          icon: Icon(Icons.volume_up, size: 30),
+          onPressed: () {
+            if (isFront) {
+              _speakEnglish();
+            } else {
+              _speakVietnamese();
+            }
+          },
         ),
       ],
     );

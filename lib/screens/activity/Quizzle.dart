@@ -6,8 +6,9 @@ import 'Result.dart';
 class Quizzle extends StatefulWidget {
   final String topic;
   final String mode;
+  final bool change;
 
-  Quizzle({required this.topic, required this.mode});
+  Quizzle({required this.topic, required this.mode, required this.change});
 
   @override
   _QuizzleState createState() => _QuizzleState();
@@ -44,14 +45,25 @@ class _QuizzleState extends State<Quizzle> {
         List<dynamic> dataList = dataSnapshot as List<dynamic>;
         for (var item in dataList) {
           if (item is Map<String, dynamic>) {
-            String word = item['word'] ?? '';
-            String fail = item['word'] ?? '';
-            String meaning_vi = item['meaning_vi'] ?? '';
-            setState(() {
-              ques.add(meaning_vi);
-              ans.add(word);
-              rand.add(fail);
-            });
+            if (widget.change) {
+              String word = item['meaning_vi'] ?? '';
+              String fail = item['meaning_vi'] ?? '';
+              String meaning_vi = item['word'] ?? '';
+              setState(() {
+                ques.add(meaning_vi);
+                ans.add(word);
+                rand.add(fail);
+              });
+            } else {
+              String word = item['word'] ?? '';
+              String fail = item['word'] ?? '';
+              String meaning_vi = item['meaning_vi'] ?? '';
+              setState(() {
+                ques.add(meaning_vi);
+                ans.add(word);
+                rand.add(fail);
+              });
+            }
           }
         }
       }

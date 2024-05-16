@@ -11,6 +11,7 @@ class ModeLearnController extends GetxController {
   final String topicId = Get.arguments['topicId'];
   final String name = Get.arguments['name'];
   final String mode = Get.arguments['mode'];
+  final bool change = Get.arguments['change'];
 }
 
 class ModeLearn extends StatelessWidget {
@@ -95,24 +96,28 @@ class ModeLearn extends StatelessWidget {
         destinationWidget = Quizzle(
           topic: controller.name,
           mode: controller.mode,
+          change: controller.change,
         );
         break;
       case 'flipcard':
         destinationWidget = FlashCardMode(
           topic: controller.name,
           mode: controller.mode,
+          change: controller.change,
         );
         break;
       case 'connect':
         destinationWidget = ConnectWord(
           topic: controller.name,
           mode: controller.mode,
+          change: controller.change,
         );
         break;
       case 'write':
         destinationWidget = WriteAnswer(
           topic: controller.name,
           mode: controller.mode,
+          change: controller.change,
         );
         break;
       default:
