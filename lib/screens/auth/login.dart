@@ -57,8 +57,11 @@ class _LoginPageState extends State<LoginPage> {
               // Logo
               Container(
                 alignment: Alignment.center,
-                child: FlutterLogo(
-                  size: 100.0,
+                child: Image.asset(
+                  'assets/logo.png',
+                  height: 200.0,
+                  width: 200.0,
+                  fit: BoxFit.cover,
                 ),
               ),
               SizedBox(height: 20.0),
@@ -119,10 +122,14 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   _signIn(context);
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                ),
                 child: Text(
                   'Đăng nhập',
                   style: TextStyle(
                     fontSize: 20.0,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -168,7 +175,8 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
 
     try {
-      User? user = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+      User? user = await _firebaseAuthService.signInWithEmailAndPassword(
+          email, password);
       if (user != null) {
         // Đăng nhập thành công
         // Chuyển hướng đến trang chính
@@ -193,7 +201,8 @@ class _LoginPageState extends State<LoginPage> {
           builder: (context) {
             return AlertDialog(
               title: Text('Lỗi'),
-              content: Text('Tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại.'),
+              content:
+                  Text('Tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại.'),
               actions: [
                 TextButton(
                   onPressed: () {
