@@ -13,6 +13,9 @@ import 'package:englishquiz/screens/home/MainScreen.dart';
 import 'package:englishquiz/screens/home/MyCustomScrollBehavior.dart';
 
 import 'package:englishquiz/screens/home/ModeLearn.dart';
+import 'package:englishquiz/screens/public_topic/ChooseMode.dart';
+import 'package:englishquiz/screens/public_topic/Modes.dart';
+import 'package:englishquiz/screens/public_topic/PublicTopics.dart';
 
 import 'package:englishquiz/screens/library/AddTopic.dart';
 import 'package:englishquiz/screens/library/InTopic.dart';
@@ -57,10 +60,17 @@ class MyApp extends StatelessWidget {
       ),
       home: LoginPage(),
       debugShowCheckedModeBanner: false,
+      initialRoute: '/login',
       getPages: [
         GetPage(name: '/add-topic', page: () => AddTopic()),
         GetPage(name: '/topic', page: () => InTopic()),
         GetPage(name: '/mode-learn', page: () => ModeLearn()),
+        GetPage(name: '/admin-topics', page: () => HomeFragment()),
+        GetPage(name: '/public-topics', page: () => PublicTopicsPage()),
+        GetPage(name: '/choose-mode', page: () => ChooseModePage()),
+        GetPage(name: '/result', page: () => ResultPage()),
+        GetPage(name: '/home', page: () => MainScreen()),
+        GetPage(name: '/login', page: () => LoginPage()),
       ],
     );
   }

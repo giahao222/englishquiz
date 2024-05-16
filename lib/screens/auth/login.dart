@@ -8,6 +8,7 @@ import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_
 import 'package:englishquiz/screens/auth/forgot_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -45,9 +46,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Đăng nhập'),
-      ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
@@ -180,10 +178,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null) {
         // Đăng nhập thành công
         // Chuyển hướng đến trang chính
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MainScreen()),
-        );
+        Get.offAllNamed('/home');
 
         // Nếu người dùng đã chọn nhớ đăng nhập, lưu thông tin đăng nhập vào SharedPreferences
         if (_rememberMe) {

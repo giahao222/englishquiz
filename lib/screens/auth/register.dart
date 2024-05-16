@@ -4,6 +4,7 @@ import 'package:englishquiz/screens/home/home.dart';
 import 'package:englishquiz/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -149,10 +150,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         await userCredential.user!.reload();
 
         // Chuyển hướng đến trang chính sau khi tạo tài khoản thành công
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MainScreen()),
-        );
+        Get.offAllNamed('/home');
 
         print("User is successfully created!");
       } catch (error) {

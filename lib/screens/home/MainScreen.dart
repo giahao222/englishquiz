@@ -4,7 +4,6 @@ import 'package:englishquiz/screens/home/BottomNavbarController.dart';
 import 'package:englishquiz/screens/home/Home.dart';
 import 'package:englishquiz/screens/library/Library.dart';
 import 'package:englishquiz/screens/library/MyTopics.dart';
-import 'package:englishquiz/screens/setting/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';

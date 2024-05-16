@@ -33,9 +33,8 @@ class TopicController extends GetxController {
         Map<String, dynamic> data =
             event.snapshot.value as Map<String, dynamic>;
         topics.value = _convertToListTopic(data);
-        userTopics.value = topics
-            .where((element) => element.creator == userId)
-            .toList();
+        userTopics.value =
+            topics.where((element) => element.creator == userId).toList();
       });
     } finally {
       isLoading(false);
@@ -110,11 +109,7 @@ class TopicItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.toNamed('mode-learn', arguments: {
-          'topicId': topic.id,
-          'name': topic.name,
-          'mode': 'user'
-        });
+        Get.toNamed('/choose-mode', arguments: {'topic': topic});
       },
       child: Card(
         elevation: 10,

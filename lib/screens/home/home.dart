@@ -6,156 +6,121 @@ import 'package:englishquiz/screens/library/MyTopics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeController extends GetxController {
-  var isExpanded = {}.obs;
-  var publicTopics = <Topic>[].obs;
-  final TopicController topicController = Get.put(TopicController());
-
-  @override
-  void onInit() {
-    super.onInit();
-    fetchPublicTopics();
-    isExpanded.value = {
-      'listOfTopics': false,
-      'publicTopics': false,
-    };
-
-    ever(topicController.topics, (_) {
-      fetchPublicTopics();
-    });
-  }
-
-  void fetchPublicTopics() {
-    publicTopics.value = topicController.topics
-        .where((element) => element.isPublic)
-        .toList() as List<Topic>;
-  }
-}
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
-  final TopicController topicController = Get.find();
-  final HomeController homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Obx(
-          () => Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                children: [
-                  ListTile(
-                    title: Text('Topics'),
-                    trailing: IconButton(
-                      icon: Icon(homeController.isExpanded['listOfTopics']
-                          ? Icons.expand_less
-                          : Icons.expand_more),
-                      onPressed: () {
-                        homeController.isExpanded['listOfTopics'] =
-                            !homeController.isExpanded['listOfTopics'];
-                        homeController.isExpanded.refresh();
-                      },
-                    ),
-                  ),
-                  Visibility(
-                    visible: homeController.isExpanded['listOfTopics'],
-                    child: GridView.builder(
-                      // Replace GridView.builder with ListView.builder
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: topicController.topics.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 5,
-                        crossAxisSpacing: 5,
-                        mainAxisSpacing: 5,
-                      ),
-                      itemBuilder: (context, index) {
-                        return TopicItemCard(
-                          topic: topicController.topics[index],
-                          fontSize: 12,
-                        );
-                      },
-                    ),
-                  ),
-                  Visibility(
-                    visible: !homeController.isExpanded['listOfTopics'],
-                    child: SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: topicController.topics.length,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: 100,
-                            child: TopicItemCard(
-                              topic: topicController.topics[index],
-                              fontSize: 12,
+          child: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              floating: true,
+              pinned: false,
+              snap: true,
+              expandedHeight: 260.0,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                background: Image.network(
+                  'https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ];
+        },
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () => Get.toNamed('/admin-topics'),
+                  child: const SizedBox(
+                    height: 300.0,
+                    width: double.infinity,
+                    child: Card(
+                      color: Color(0xFFE3F2FD),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.verified_rounded,
+                              size: 100.0,
+                              color: Color(0xFF1E88E5),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text('Public Topics'),
-                    trailing: IconButton(
-                      icon: Icon(homeController.isExpanded['publicTopics']
-                          ? Icons.expand_less
-                          : Icons.expand_more),
-                      onPressed: () {
-                        homeController.isExpanded['publicTopics'] =
-                            !homeController.isExpanded['publicTopics'];
-                        homeController.isExpanded.refresh();
-                      },
-                    ),
-                  ),
-                  Visibility(
-                    visible: homeController.isExpanded['publicTopics'],
-                    child: GridView.builder(
-                      // Replace GridView.builder with ListView.builder
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: homeController.publicTopics.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 5,
-                        crossAxisSpacing: 5,
-                        mainAxisSpacing: 5,
-                      ),
-                      itemBuilder: (context, index) {
-                        return TopicItemCard(
-                          topic: homeController.publicTopics[index],
-                          fontSize: 12,
-                        );
-                      },
-                    ),
-                  ),
-                  Visibility(
-                    visible: !homeController.isExpanded['publicTopics'],
-                    child: SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: homeController.publicTopics.length,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: 100,
-                            child: TopicItemCard(
-                              topic: homeController.publicTopics[index],
-                              fontSize: 12,
+                            SizedBox(height: 50.0),
+                            Text(
+                              'English Quiz for Learners',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1E88E5),
+                              ),
                             ),
-                          );
-                        },
+                            Text(
+                              'Contains a lot of topics for you to learn and practice English',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Color(0xFF1E88E5),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ],
-              )),
+                ),
+                SizedBox(height: 16.0),
+                GestureDetector(
+                  onTap: () => Get.toNamed('/public-topics'),
+                  child: SizedBox(
+                    height: 300.0,
+                    width: double.infinity,
+                    child: Card(
+                      color: Color(0xFFF3E5F5),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.public_rounded,
+                              size: 100.0,
+                              color: Color(0xFF8E24AA),
+                            ),
+                            SizedBox(height: 50.0),
+                            Text(
+                              'Public Topics',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF8E24AA),
+                              ),
+                            ),
+                            Text(
+                              'Explore and learn from public topics',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Color(0xFF8E24AA),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
-      ),
+      )),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           Navigator.push(
@@ -164,9 +129,6 @@ class HomePage extends StatelessWidget {
               builder: (context) => HomeFragment(),
             ),
           );
-
-          print(topicController.userId);
-          print(topicController.userTopics);
         },
         child: Icon(Icons.add),
       ),
