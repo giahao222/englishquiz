@@ -1,12 +1,6 @@
-import 'package:englishquiz/screens/activity/ConnectWord.dart';
-import 'package:englishquiz/screens/activity/FlashCardMode.dart';
-import 'package:englishquiz/screens/activity/Quizzle.dart';
-import 'package:englishquiz/screens/activity/WriteAnswer.dart';
 
 import 'package:englishquiz/screens/auth/login.dart';
-import 'package:englishquiz/screens/auth/profile.dart';
 
-import 'package:englishquiz/screens/home/Home.dart';
 import 'package:englishquiz/screens/home/HomeFragment.dart';
 import 'package:englishquiz/screens/home/MainScreen.dart';
 
@@ -19,7 +13,6 @@ import 'package:englishquiz/screens/public_topic/PublicTopics.dart';
 
 import 'package:englishquiz/screens/library/AddTopic.dart';
 import 'package:englishquiz/screens/library/InTopic.dart';
-import 'package:englishquiz/screens/library/MyTopics.dart';
 import 'package:englishquiz/services/FirebaseService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -32,14 +25,15 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
-      name: 'SecondaryApp',
       options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else{
+    await Firebase.initializeApp(
+      //options: DefaultFirebaseOptions.currentPlatform,
     );
   }
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
 
   Get.put(FirebaseService());
   runApp(const MyApp());

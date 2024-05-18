@@ -31,7 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.6
-  web:
   get:
   image_picker: ^1.0.8
   csv: ^6.0.0

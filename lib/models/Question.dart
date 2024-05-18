@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:englishquiz/models/Topic.dart';
 import 'package:englishquiz/screens/public_topic/Modes.dart';
 import 'package:englishquiz/utils/APIFetcher.dart';
-import 'package:web/helpers.dart';
 
 class Question {
   final String question;
