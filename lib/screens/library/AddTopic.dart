@@ -45,6 +45,10 @@ class AddTopicController extends GetxController {
     }
   }
 
+  void clearAll() {
+    listCard.clear();
+  }
+
   void uploadTopic() async {
     if (name.value.isEmpty || image.value.isEmpty || listCard.isEmpty) {
       Get.snackbar('Error', 'Please fill all fields',
@@ -204,6 +208,17 @@ class AddTopic extends StatelessWidget {
                       icon: Icon(Icons.add),
                     ),
                   ),
+                  Obx(() => Visibility(
+                        child: Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            tooltip: 'Delete all',
+                            onPressed: controller.clearAll,
+                            icon: Icon(Icons.delete_rounded, color: Colors.red),
+                          ),
+                        ),
+                        visible: controller.listCard.isNotEmpty,
+                      )),
                   Expanded(
                     flex: 1,
                     child: IconButton(

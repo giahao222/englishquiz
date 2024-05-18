@@ -291,6 +291,11 @@ class FlashCardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Flashcard', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
+      ),
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -541,9 +546,15 @@ class ResultPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(resultController
-                            .listQuestion.questions[index].question),
-                        subtitle: Text(
-                            'Your answer: ${resultController.userAnswer[index]}'),
+                            .listQuestion.questions[index].question, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Your answer: ${resultController.userAnswer[index]}'),
+                            Text('Correct answer: ${resultController.listQuestion.questions[index].answer}')
+                          ],
+                        ),
                         trailing: resultController
                                     .listQuestion.questions[index].answer ==
                                 resultController.userAnswer[index]

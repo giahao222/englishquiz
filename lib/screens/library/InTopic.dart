@@ -52,6 +52,10 @@ class InTopicController extends GetxController {
     });
   }
 
+  void clearAll() {
+    listCard.clear();
+  }
+
   void importFromCSV() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -288,6 +292,17 @@ class InTopic extends StatelessWidget {
                       icon: Icon(Icons.add),
                     ),
                   ),
+                  Obx(() => Visibility(
+                        child: Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            tooltip: 'Delete all',
+                            onPressed: controller.clearAll,
+                            icon: Icon(Icons.delete_rounded, color: Colors.red),
+                          ),
+                        ),
+                        visible: controller.listCard.isNotEmpty,
+                      )),
                   Expanded(
                     flex: 1,
                     child: IconButton(
