@@ -33,6 +33,7 @@ class ListQuestion {
     print('EngWords: $engWords');
     print('VietWords: $vietWords');
     switch (mode) {
+      
       case ModeType.quiz:
         for (int i = 0; i < vietWords.length; i++) {
           List<String> randOptions = [];
@@ -52,6 +53,7 @@ class ListQuestion {
         }
         questions.shuffle();
         return ListQuestion(questions: questions, mode: mode);
+      
       case ModeType.connect: // Kết quả: t/t/a/o/j
         for (int i = 0; i < vietWords.length; i++) {
           String engWord = engWords[i];
@@ -66,6 +68,7 @@ class ListQuestion {
         }
         questions.shuffle();
         return ListQuestion(questions: questions, mode: mode);
+
       case ModeType.flashcard:
         for (int i = 0; i < vietWords.length; i++) {
           questions.add(Question(
@@ -76,12 +79,13 @@ class ListQuestion {
         }
         questions.shuffle();
         return ListQuestion(questions: questions, mode: mode);
-      case ModeType.flashcard:
+      
+      case ModeType.write:
         for (int i = 0; i < vietWords.length; i++) {
           questions.add(Question(
-            question: engWords[i],
+            question: vietWords[i],
             options: [],
-            answer: vietWords[i],
+            answer: engWords[i],
           ));
         }
         questions.shuffle();
