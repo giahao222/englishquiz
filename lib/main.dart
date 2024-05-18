@@ -25,14 +25,15 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
-      name: 'SecondaryApp',
       options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else{
+    await Firebase.initializeApp(
+      //options: DefaultFirebaseOptions.currentPlatform,
     );
   }
 
-  await Firebase.initializeApp(
-    //options: DefaultFirebaseOptions.currentPlatform,
-  );
+
 
   Get.put(FirebaseService());
   runApp(const MyApp());
