@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Result extends StatelessWidget {
   final List<String> questions;
@@ -61,6 +62,21 @@ class Result extends StatelessWidget {
             child: Text(
               'Score: $correctCount/${questions.length}',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.offAllNamed('/home');
+              Get.toNamed('/admin-topics');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+            ),
+            child: Text(
+              'OK',
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
         ],

@@ -1,7 +1,12 @@
+import 'package:englishquiz/screens/activity/Finish.dart';
+import 'package:englishquiz/screens/home/HomeFragment.dart';
+import 'package:englishquiz/screens/home/home.dart';
+import 'package:englishquiz/screens/public_topic/Modes.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:lottie/lottie.dart';
 
 class FlashCardMode extends StatefulWidget {
   final String topic;
@@ -96,13 +101,8 @@ class _FlashCardModeState extends State<FlashCardMode>
                 ? _controller.reverse()
                 : _controller.forward();
 
-            // if (isFront) {
-            //   _speakEnglish();
-            // } else {
-            //   _speakVietnamese();
-            // }
             setState(() {
-              if (i < eng.length - 1) {
+              if (i < eng.length) {
                 isFront = !isFront;
               }
             });
@@ -132,7 +132,7 @@ class _FlashCardModeState extends State<FlashCardMode>
                     ? _controller.reverse()
                     : _controller.forward();
                 setState(() {
-                  if (i < eng.length - 1) {
+                  if (i < eng.length) {
                     isFront = !isFront;
                   }
                 });
@@ -151,6 +151,10 @@ class _FlashCardModeState extends State<FlashCardMode>
             SizedBox(width: 20),
             ElevatedButton(
               onPressed: () {
+                if (i == eng.length - 1) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => Finish()));
+                }
                 setState(() {
                   if (i < eng.length - 1) {
                     i++;
@@ -161,13 +165,21 @@ class _FlashCardModeState extends State<FlashCardMode>
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
               ),
-              child: Text(
-                'Next',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-              ),
+              child: i == eng.length - 1
+                  ? Text(
+                      'Done',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    )
+                  : Text(
+                      'Next',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
             ),
           ],
         ),
@@ -182,6 +194,7 @@ class _FlashCardModeState extends State<FlashCardMode>
             }
           },
         ),
+        SizedBox(height: 20),
       ],
     );
   }

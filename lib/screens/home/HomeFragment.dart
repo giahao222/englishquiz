@@ -281,7 +281,6 @@ class _HomeFragmentState extends State<HomeFragment> {
           String imageId = _getImage(imageList);
 
           mTopic.add(Topic(entry.toString(), dataSnapshot3, imageId));
-          print('data: ' + dataSnapshot3);
         }
       }
     } catch (e) {

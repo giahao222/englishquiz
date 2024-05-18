@@ -6,7 +6,6 @@ import 'package:englishquiz/screens/library/MyTopics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
@@ -121,17 +120,17 @@ class HomePage extends StatelessWidget {
           ),
         ),
       )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeFragment(),
-            ),
-          );
-        },
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => HomeFragment(),
+      //       ),
+      //     );
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }
