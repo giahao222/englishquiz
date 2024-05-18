@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:englishquiz/models/Question.dart';
+import 'package:englishquiz/utils/APIFetcher.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 enum ModeType { quiz, connect, flashcard, write }
 
@@ -28,6 +33,8 @@ class ModeController extends GetxController {
   var quesIndex = 0.obs;
   var userAnswer = <String>[];
   var nextButton = 'Next Question'.obs;
+  var isFront = true.obs;
+  final audioPlayer = AudioPlayer();
 
   @override
   void onInit() async {
@@ -53,6 +60,10 @@ class ModeController extends GetxController {
     if (quesIndex.value == listQuestion.questions.length - 1) {
       nextButton.value = 'Finish';
     }
+  }
+
+  void flipCard() {
+    isFront.value = !isFront.value;
   }
 }
 
@@ -175,7 +186,8 @@ class ConnectWordPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
-        title: const Text('Connect Word', style: TextStyle(color: Colors.white)),
+        title:
+            const Text('Connect Word', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -183,7 +195,7 @@ class ConnectWordPage extends StatelessWidget {
           () => Column(
             children: [
               SizedBox(
-                height: 200,
+                height: 300,
                 width: double.infinity,
                 child: Card(
                   elevation: 4,
@@ -191,10 +203,13 @@ class ConnectWordPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          modeController.listQuestion
-                              .questions[modeController.quesIndex.value].question,
+                          modeController
+                              .listQuestion
+                              .questions[modeController.quesIndex.value]
+                              .question,
                           style: const TextStyle(
                             fontSize: 24,
                             color: Color(0xFFC2185B),
@@ -202,7 +217,32 @@ class ConnectWordPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                      
+                        FutureBuilder<String>(
+                          future: APIFetcher.instance.fetchHints(modeController
+                              .listQuestion
+                              .questions[modeController.quesIndex.value]
+                              .answer),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            }
+                            if (snapshot.hasError) {
+                              return const Text('Error');
+                            }
+                            String hints = jsonDecode(snapshot.data.toString())
+                                .first['meanings']
+                                .first['definitions']
+                                .first['definition'];
+                            return Text(
+                              'Hint: $hints',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Color(0xFFC2185B),
+                              ),
+                            );
+                          },
+                        )
                       ],
                     ),
                   ),
@@ -234,7 +274,8 @@ class ConnectWordPage extends StatelessWidget {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   textStyle: const TextStyle(fontSize: 20),
                   backgroundColor: const Color(0xFFFCE4EC),
                 ),
@@ -253,7 +294,73 @@ class FlashCardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: SafeArea(
+          child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Obx(() => GestureDetector(
+              onTap: () {
+                modeController.flipCard();
+              },
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                child: modeController.isFront.value
+                    ? Card(
+                        elevation: 4,
+                        color: const Color(0xFFFCE4EC),
+                        child: Center(
+                          child: Text(
+                            modeController.listQuestion
+                                .questions[modeController.quesIndex.value]
+                                .question,
+                            style: const TextStyle(
+                                fontSize: 24,
+                                color: Color(0xFFC2185B),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )
+                    : Card(
+                        elevation: 4,
+                        color: const Color(0xFFFCE4EC),
+                        child: Center(
+                          child: Text(
+                            modeController.listQuestion
+                                .questions[modeController.quesIndex.value]
+                                .answer,
+                            style: const TextStyle(
+                                fontSize: 24,
+                                color: Color(0xFFC2185B),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+              ),
+            )),
+            ElevatedButton(
+              onPressed: () {
+                modeController.nextQuestion('');
+              },
+              child: Text(
+                modeController.nextButton.value,
+                style: const TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFFC2185B),
+                    fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                textStyle: const TextStyle(fontSize: 20),
+                backgroundColor: const Color(0xFFFCE4EC),
+              ),
+            )
+          ]),
+        ),
+      )),
+    );
   }
 }
 
