@@ -12,12 +12,13 @@ class APIFetcher {
     return _instance!;
   }
 
-  Future<dynamic> fetchAPI(String url) async {
-    final response = await http.get(Uri.parse(url));
+  Future<String> fetchHints(String word) async {
+    final response = await http.get(
+        Uri.parse('https://api.dictionaryapi.dev/api/v2/entries/en/$word'));
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      return response.body;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception('Failed to load hints');
     }
   }
 }

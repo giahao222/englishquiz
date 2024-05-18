@@ -62,6 +62,16 @@ class ListQuestion {
           questions.add(Question(
             question: question,
             options: [],
+            answer: engWords[i],
+          ));
+        }
+        questions.shuffle();
+        return ListQuestion(questions: questions, mode: mode);
+      case ModeType.flashcard:
+        for (int i = 0; i < vietWords.length; i++) {
+          questions.add(Question(
+            question: engWords[i],
+            options: [],
             answer: vietWords[i],
           ));
         }
