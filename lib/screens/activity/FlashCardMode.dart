@@ -128,6 +128,27 @@ class _FlashCardModeState extends State<FlashCardMode>
           children: [
             ElevatedButton(
               onPressed: () {
+                setState(() {
+                  if (i < eng.length - 1 && i > 0) {
+                    i--;
+                    isFront = true;
+                  }
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+              ),
+              child: Text(
+                'Back',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            SizedBox(width: 20),
+            ElevatedButton(
+              onPressed: () {
                 _controller.isCompleted
                     ? _controller.reverse()
                     : _controller.forward();
@@ -190,7 +211,7 @@ class _FlashCardModeState extends State<FlashCardMode>
             if (isFront) {
               _speakEnglish();
             } else {
-              _speakEnglish();
+              _speakVietnamese();
             }
           },
         ),
