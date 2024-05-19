@@ -235,8 +235,10 @@ class MyFolder extends StatelessWidget {
                               ),
                               onTap: () {
                                 Get.toNamed('/topic',
-                                    arguments: folderController
-                                        .folders[index].mTopic[indexTopic].id);
+                                    arguments: {
+                                      'topicId': folderController
+                                          .folders[index].mTopic[indexTopic].id
+                                    });
                               },
                               trailing: IconButton(
                                 icon: const Icon(

@@ -224,7 +224,7 @@ class ConnectWordPage extends StatelessWidget {
                               return const CircularProgressIndicator();
                             }
                             if (snapshot.hasError) {
-                              return const Text('Error');
+                              return const Text('Not found hints');
                             }
                             String hints = jsonDecode(snapshot.data.toString())
                                 .first['meanings']
@@ -253,6 +253,10 @@ class ConnectWordPage extends StatelessWidget {
                     labelText: 'Answer',
                     border: OutlineInputBorder(),
                   ),
+                  onFieldSubmitted: (value) {
+                    modeController.nextQuestion(value);
+                    answerController.clear();
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -439,6 +443,10 @@ class WriteAnswerPage extends StatelessWidget {
                     labelText: 'Answer',
                     border: OutlineInputBorder(),
                   ),
+                  onFieldSubmitted: (value) {
+                    modeController.nextQuestion(value);
+                    answerController.clear();
+                  },
                 ),
               ),
               const SizedBox(height: 16),
