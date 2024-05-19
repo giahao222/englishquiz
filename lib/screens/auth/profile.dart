@@ -2,6 +2,9 @@ import 'package:englishquiz/screens/auth/change_password.dart';
 import 'package:englishquiz/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'google_sign_in.dart';
 
 class ProfilePage extends StatelessWidget {
   final String? displayName = FirebaseAuth.instance.currentUser!.displayName;
@@ -66,6 +69,9 @@ class ProfilePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 _signOut(context);
+                final provider =
+                Provider.of<GoogleSignInProvider>(context, listen: false);
+                provider.logout();
               },
               child: Text('Đăng xuất'),
             ),

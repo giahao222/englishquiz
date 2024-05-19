@@ -1,6 +1,7 @@
 
+import 'package:englishquiz/screens/auth/google_sign_in.dart';
 import 'package:englishquiz/screens/auth/login.dart';
-
+import 'package:provider/provider.dart';
 import 'package:englishquiz/screens/home/HomeFragment.dart';
 import 'package:englishquiz/screens/home/MainScreen.dart';
 
@@ -44,8 +45,9 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+    create: (context) => GoogleSignInProvider(),
+    child: GetMaterialApp(
       scrollBehavior: MyCustomScrollBehavior(),
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -66,6 +68,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/home', page: () => MainScreen()),
         GetPage(name: '/login', page: () => LoginPage()),
       ],
-    );
-  }
+    ),
+  );
+
 }

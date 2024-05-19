@@ -1,4 +1,5 @@
 import 'package:englishquiz/screens/activity/ConnectWord.dart';
+import 'package:englishquiz/screens/auth/google_sign_in.dart';
 import 'package:englishquiz/screens/auth/profile.dart';
 import 'package:englishquiz/screens/auth/register.dart';
 import 'package:englishquiz/screens/home/MainScreen.dart';
@@ -8,7 +9,10 @@ import 'package:englishquiz/services/firebase_auth_implementation/firebase_auth_
 import 'package:englishquiz/screens/auth/forgot_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -57,8 +61,8 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.center,
                 child: Image.asset(
                   'assets/logo.png',
-                  height: 200.0,
-                  width: 200.0,
+                  height: 300.0,
+                  width: 400.0,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -125,6 +129,25 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 child: Text(
                   'Đăng nhập',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              ElevatedButton.icon(
+                onPressed: () {
+                  final provider =
+                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                  provider.googleLogin(context);
+                },
+                icon: FaIcon(FontAwesomeIcons.google, color: Colors.white),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                ),
+                label: Text(
+                  'Đăng Nhập Bằng Google',
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Colors.white,
@@ -243,6 +266,26 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       print("Error sending password reset email: $e");
       // Xử lý lỗi khi gửi email xác minh
+    }
+  }
+
+  _signInWithGooole() async{
+
+    GoogleSignInAccount? googleuser = await GoogleSignIn().signIn();
+
+    GoogleSignInAuthentication? googleAuth = await googleuser?.authentication;
+
+    AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+    print(userCredential.user?.displayName);
+
+    if(userCredential.user != null){
+      Get.offAllNamed('/home');
     }
   }
 }
