@@ -40,7 +40,7 @@ class ModeLearn extends StatelessWidget {
       ModeLearning("Quizzes", 'quizz'),
       ModeLearning("Flash card", 'flipcard'),
       ModeLearning("Connect Word", 'connect'),
-      ModeLearning("Q&A", 'write'),
+      ModeLearning("Translation", 'write'),
     ];
 
     return ListView.builder(

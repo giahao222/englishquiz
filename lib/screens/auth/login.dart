@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
-                  labelText: 'Mật khẩu',
+                  labelText: 'Password',
                   border: OutlineInputBorder(),
                 ),
                 obscureText: true,
@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                       _sendPasswordResetEmail(_emailController.text);
                     },
                     child: Text(
-                      'Quên mật khẩu?',
+                      'Forgot Password?',
                       style: TextStyle(
                         color: Colors.blue,
                       ),
@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                   backgroundColor: Colors.blue,
                 ),
                 child: Text(
-                  'Đăng nhập',
+                  'Sign In',
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Colors.white,
@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                   backgroundColor: Colors.blue,
                 ),
                 label: Text(
-                  'Đăng Nhập Bằng Google',
+                  'Sign In With Google',
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Colors.white,
@@ -169,13 +169,13 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Chưa có tài khoản? ',
+                      'Do not have an account? ',
                       style: TextStyle(
                         color: Colors.black,
                       ),
                     ),
                     Text(
-                      'Đăng ký',
+                      'Register now',
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
@@ -218,9 +218,9 @@ class _LoginPageState extends State<LoginPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text('Lỗi'),
+              title: Text('Error'),
               content:
-                  Text('Tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại.'),
+                  Text('Email or password is incorrect. Please try again.'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -242,8 +242,8 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Lỗi'),
-            content: Text('Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.'),
+            title: Text('Error'),
+            content: Text('An error occurred. Please try again.'),
             actions: [
               TextButton(
                 onPressed: () {

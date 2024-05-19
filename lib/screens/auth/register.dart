@@ -27,7 +27,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đăng ký'),
+        title: Text('REGISTER'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
@@ -46,7 +46,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
-                labelText: 'Tên',
+                labelText: 'Name',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -64,7 +64,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(
-                labelText: 'Mật khẩu',
+                labelText: 'Password',
                 border: OutlineInputBorder(),
               ),
               obscureText: true,
@@ -74,7 +74,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             TextField(
               controller: _confirmPasswordController,
               decoration: InputDecoration(
-                labelText: 'Xác nhận mật khẩu',
+                labelText: 'Confirm Password',
                 border: OutlineInputBorder(),
               ),
               obscureText: true,
@@ -83,7 +83,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             // Nút Đăng ký
             ElevatedButton(
               onPressed: _signUp,
-              child: Text('Đăng ký'),
+              child: Text('Register'),
             ),
             SizedBox(height: 20.0),
             // Chuyển hướng đến trang Đăng nhập
@@ -99,13 +99,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Đã có tài khoản? ',
+                    'Already have an account?',
                     style: TextStyle(
                       color: Colors.black,
                     ),
                   ),
                   Text(
-                    'Đăng nhập',
+                    'Sign in',
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold, // In đậm để nổi bật
@@ -162,8 +162,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Mật khẩu không khớp"),
-            content: Text("Mật khẩu và xác nhận mật khẩu không giống nhau. Vui lòng thử lại."),
+            title: Text("Password Mismatch"),
+            content: Text("Password and Confirm Password do not match. Please try again."),
             actions: [
               TextButton(
                 onPressed: () {

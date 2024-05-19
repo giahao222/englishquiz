@@ -12,11 +12,16 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  // State variables to manage password visibility
+  bool _isOldPasswordVisible = false;
+  bool _isNewPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đổi mật khẩu'),
+        title: Text('Change Password'),
       ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
@@ -26,33 +31,63 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             TextField(
               controller: _oldPasswordController,
               decoration: InputDecoration(
-                labelText: 'Mật khẩu cũ',
+                labelText: 'Current Password',
                 border: OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isOldPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isOldPasswordVisible = !_isOldPasswordVisible;
+                    });
+                  },
+                ),
               ),
-              obscureText: true,
+              obscureText: !_isOldPasswordVisible,
             ),
             SizedBox(height: 20.0),
             TextField(
               controller: _newPasswordController,
               decoration: InputDecoration(
-                labelText: 'Mật khẩu mới',
+                labelText: 'New Password',
                 border: OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isNewPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isNewPasswordVisible = !_isNewPasswordVisible;
+                    });
+                  },
+                ),
               ),
-              obscureText: true,
+              obscureText: !_isNewPasswordVisible,
             ),
             SizedBox(height: 20.0),
             TextField(
               controller: _confirmPasswordController,
               decoration: InputDecoration(
-                labelText: 'Xác nhận mật khẩu mới',
+                labelText: 'Confirm Password',
                 border: OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                    });
+                  },
+                ),
               ),
-              obscureText: true,
+              obscureText: !_isConfirmPasswordVisible,
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: _changePassword,
-              child: Text('Đổi mật khẩu'),
+              child: Text('Change Password'),
             ),
           ],
         ),
@@ -93,8 +128,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text('Thành công'),
-                content: Text('Đổi mật khẩu thành công.'),
+                title: Text('Success'),
+                content: Text('Password updated successfully. Please sign in again.'),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -115,8 +150,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text('Lỗi'),
-              content: Text('Mật khẩu cũ không chính xác. Vui lòng thử lại.'),
+              title: Text('Error'),
+              content: Text('Current password is incorrect. Please try again.'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -135,8 +170,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Lỗi'),
-            content: Text('Mật khẩu mới và xác nhận mật khẩu mới không khớp nhau. Vui lòng thử lại.'),
+            title: Text('Error'),
+            content: Text('New passwords do not match. Please try again.'),
             actions: [
               TextButton(
                 onPressed: () {

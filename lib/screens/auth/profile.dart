@@ -73,7 +73,7 @@ class ProfilePage extends StatelessWidget {
                 Provider.of<GoogleSignInProvider>(context, listen: false);
                 provider.logout();
               },
-              child: Text('Đăng xuất'),
+              child: Text('Logout'),
             ),
           ],
         ),

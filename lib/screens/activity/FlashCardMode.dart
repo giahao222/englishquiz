@@ -190,7 +190,7 @@ class _FlashCardModeState extends State<FlashCardMode>
             if (isFront) {
               _speakEnglish();
             } else {
-              _speakVietnamese();
+              _speakEnglish();
             }
           },
         ),
